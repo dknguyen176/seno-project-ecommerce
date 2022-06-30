@@ -15,6 +15,9 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 */
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.senomerc.adapters.CategoryAdapter;
 import com.example.senomerc.adapters.NewProductsAdapter;
 import com.example.senomerc.model.CategoryModel;
@@ -61,11 +64,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void createNewProductsList(View root) {
-        newProductRecyclerView = root.findViewById(R.id.rec_category);
+        newProductRecyclerView = root.findViewById(R.id.new_product_rec);
         newProductRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
         newProductsModelList = new ArrayList<>();
         newProductsAdapter = new NewProductsAdapter(getActivity(),newProductsModelList);
-        newProductRecyclerView.setAdapter(categoryAdapter);
+        newProductRecyclerView.setAdapter(newProductsAdapter);
 
         String string = "";
         InputStream is = this.getResources().openRawResource(R.raw.newproducts_list_item);
@@ -119,7 +122,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void createImageSlider(View root) {
-        /*
         ImageSlider imageSlider = root.findViewById(R.id.image_slider);
         List<SlideModel> slideModels = new ArrayList<>();
 
@@ -128,6 +130,5 @@ public class HomeFragment extends Fragment {
         slideModels.add(new SlideModel(R.drawable.banner3, "Banner 3", ScaleTypes.FIT));
 
         imageSlider.setImageList(slideModels);
-        */
     }
 }

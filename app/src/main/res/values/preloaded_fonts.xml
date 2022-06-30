@@ -2,5 +2,13 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/amethysta</item>
+        <item>@font/overlock</item>
+        <item>@font/overlock_black</item>
+        <item>@font/overlock_bold</item>
+        <item>@font/roboto</item>
+        <item>@font/roboto_black</item>
+        <item>@font/roboto_bold</item>
+        <item>@font/roboto_condensed_regular</item>
+        <item>@font/roboto_medium</item>
     </array>
 </resources>

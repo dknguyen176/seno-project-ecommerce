@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "975528886979",
+    "project_id": "senomerc",
+    "storage_bucket": "senomerc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975528886979:android:870441de575e0896715876",
+        "android_client_info": {
+          "package_name": "com.example.senomerc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975528886979-2gekssqv47cm6ohlue5f88tff6fvda7r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa5KXy4l4gT4oO9iK_IXnNFHCJAF8CdKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975528886979-2gekssqv47cm6ohlue5f88tff6fvda7r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
