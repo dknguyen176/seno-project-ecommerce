@@ -1,4 +1,4 @@
-package com.example.senomerc;
+package com.example.senomerc.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.senomerc.model.CategoryModel;
+import com.example.senomerc.R;
 
 import java.util.List;
 
