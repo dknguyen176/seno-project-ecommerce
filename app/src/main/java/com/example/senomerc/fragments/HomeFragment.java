@@ -3,6 +3,7 @@ package com.example.senomerc.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,19 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/*
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
-*/
+
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.senomerc.adapters.CategoryAdapter;
 import com.example.senomerc.adapters.NewProductsAdapter;
+import com.example.senomerc.adapters.PopularProductsAdapter;
 import com.example.senomerc.model.CategoryModel;
 import com.example.senomerc.R;
 import com.example.senomerc.model.NewProductsModel;
+import com.example.senomerc.model.PopularProductsModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +35,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    RecyclerView catRecyclerView, newProductRecyclerView;
+    RecyclerView catRecyclerView, newProductRecyclerView, popularProductRecyclerView;
 
     // Category RecyclerView
     CategoryAdapter categoryAdapter;
@@ -42,6 +44,10 @@ public class HomeFragment extends Fragment {
     // New Products RecyclerView
     NewProductsAdapter newProductsAdapter;
     List<NewProductsModel> newProductsModelList;
+
+    // Popular Products RecyclerView
+    PopularProductsAdapter popularProductsAdapter;
+    List<PopularProductsModel> popularProductsModelList;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -59,19 +65,20 @@ public class HomeFragment extends Fragment {
 
         createNewProductsList(root);
 
+        createPopularProductsList(root);
 
         return root;
     }
 
-    private void createNewProductsList(View root) {
-        newProductRecyclerView = root.findViewById(R.id.new_product_rec);
-        newProductRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
-        newProductsModelList = new ArrayList<>();
-        newProductsAdapter = new NewProductsAdapter(getActivity(),newProductsModelList);
-        newProductRecyclerView.setAdapter(newProductsAdapter);
+    private void createPopularProductsList(View root) {
+        popularProductRecyclerView = root.findViewById(R.id.popular_rec);
+        popularProductRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        popularProductsModelList = new ArrayList<>();
+        popularProductsAdapter = new PopularProductsAdapter(getActivity(),popularProductsModelList);
+        popularProductRecyclerView.setAdapter(popularProductsAdapter);
 
         String string = "";
-        InputStream is = this.getResources().openRawResource(R.raw.newproducts_list_item);
+        InputStream is = this.getResources().openRawResource(R.raw.newproducts_list_items);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         while (true) {
             try {
@@ -82,7 +89,35 @@ public class HomeFragment extends Fragment {
             }
             String[] arr = string.split("\\|",-1);
             if (arr.length < 5) continue;
-            newProductsModelList.add(new NewProductsModel(arr[0], arr[1], arr[2], Integer.valueOf(arr[3]), arr[4]));
+            popularProductsModelList.add(new PopularProductsModel(arr[0], arr[1], arr[2], Integer.parseInt(arr[3]), arr[4]));
+        }
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createNewProductsList(View root) {
+        newProductRecyclerView = root.findViewById(R.id.new_product_rec);
+        newProductRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
+        newProductsModelList = new ArrayList<>();
+        newProductsAdapter = new NewProductsAdapter(getActivity(),newProductsModelList);
+        newProductRecyclerView.setAdapter(newProductsAdapter);
+
+        String string = "";
+        InputStream is = this.getResources().openRawResource(R.raw.newproducts_list_items);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        while (true) {
+            try {
+                if ((string = reader.readLine()) == null) break;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            String[] arr = string.split("\\|",-1);
+            if (arr.length < 5) continue;
+            newProductsModelList.add(new NewProductsModel(arr[0], arr[1], arr[2], Integer.parseInt(arr[3]), arr[4]));
         }
         try {
             is.close();
