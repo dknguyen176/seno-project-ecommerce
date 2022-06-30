@@ -1,4 +1,4 @@
-package com.example.senomerc;
+package com.example.senomerc.model;
 
 public class CategoryModel {
     String name;
