@@ -90,7 +90,7 @@ public class DetailedActivity extends AppCompatActivity {
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // onClickAddToCart();
+                onClickAddToCart();
             }
         });
     }
