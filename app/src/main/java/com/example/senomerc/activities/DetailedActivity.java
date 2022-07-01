@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -32,8 +33,10 @@ public class DetailedActivity extends AppCompatActivity {
     ImageView detailedImg;
     TextView name, description, price, quantity;
     Button addToCart;
-    ImageView addItems, removeItems;
+    ImageButton plus, minus;
     RatingBar rating;
+
+    int price1, count;
 
     private FirebaseFirestore firestore;
 
@@ -77,14 +80,25 @@ public class DetailedActivity extends AppCompatActivity {
         price = findViewById(R.id.detailed_price);
         rating = findViewById(R.id.detailed_rating);
         addToCart = findViewById(R.id.btn_addToCart);
+        quantity = findViewById(R.id.cart_quantity);
+        plus = findViewById(R.id.cart_add);
+        minus = findViewById(R.id.cart_remove);
 
         // Set view's content here
-        if (productsModel != null){
+        if (productsModel != null) {
+            price1 = productsModel.getPrice();
+            count = 1;
+
             Glide.with(this).load(productsModel.getImg_url()).into(detailedImg);
             name.setText(productsModel.getName());
-            description.setText(productsModel.getDescription());
-            price.setText(String.valueOf(productsModel.getPrice()));
             rating.setRating(Float.parseFloat(productsModel.getRating()));
+            description.setText(productsModel.getDescription());
+            price.setText(String.format("%d.%03dđ", price1 / 1000, price1 % 1000));
+            addToCart.setText(String.format("%d.%03dđ - Add to Cart", price1/1000, price1%1000));
+            quantity.setText("1");
+        } else {
+            price1 = 0;
+            count = 0;
         }
 
         // Set on click listener
@@ -94,19 +108,40 @@ public class DetailedActivity extends AppCompatActivity {
                 onClickAddToCart();
             }
         });
+
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (count < 99) {
+                    count = count + 1;
+                    int totalPrice = price1 * count;
+                    quantity.setText(String.format("%d", count));
+                    addToCart.setText(String.format("%d.%03dđ - Add to Cart", totalPrice / 1000, totalPrice % 1000));
+                }
+            }
+        });
+
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (count > 1) {
+                    count = count - 1;
+                    int totalPrice = price1 * count;
+                    quantity.setText(String.format("%d", count));
+                    addToCart.setText(String.format("%d.%03dđ - Add to Cart", totalPrice / 1000, totalPrice % 1000));
+                }
+            }
+        });
     }
 
     private void onClickAddToCart() {
         final HashMap<String, Object> cartMap = new HashMap<>();
-        cartMap.put("productName", name.getText().toString());
-        cartMap.put("productPrice", price.getText().toString());
-
 
         cartMap.put("img_url", productsModel.getImg_url());
         cartMap.put("name", name.getText());
-        cartMap.put("price", Integer.parseInt(price.getText().toString()));
-        cartMap.put("quantity", 1);
-        cartMap.put("totalPrice", Integer.parseInt(price.getText().toString()));
+        cartMap.put("price", price1);
+        cartMap.put("quantity", count);
+        cartMap.put("totalPrice", price1 * count);
 
         firestore.collection("AddToCart")
                 .add(cartMap)

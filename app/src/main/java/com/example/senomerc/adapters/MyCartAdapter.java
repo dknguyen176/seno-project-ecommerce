@@ -41,7 +41,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
         holder.name.setText(list.get(position).getName());
         holder.price = list.get(position).getPrice();
-        holder.total.setText(String.format("%d.%dđ", totalPrice / 1000, totalPrice % 1000));
+        holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
         holder.quantity.setText(String.valueOf(list.get(position).getQuantity()));
 
         holder.plus.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +52,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     count = count + 1;
                     int totalPrice = holder.price * count;
                     holder.quantity.setText(String.format("%d", count));
-                    holder.total.setText(String.format("%d.%dđ", totalPrice / 1000, totalPrice % 1000));
+                    holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
                 }
             }
         });
@@ -65,7 +65,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     count = count - 1;
                     int totalPrice = holder.price * count;
                     holder.quantity.setText(String.format("%d", count));
-                    holder.total.setText(String.format("%d.%dđ", totalPrice / 1000, totalPrice % 1000));
+                    holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
                 }
             }
         });
