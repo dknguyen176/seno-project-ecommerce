@@ -17,16 +17,11 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 
-import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.constants.ScaleTypes;
-import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.senomerc.adapters.CategoryAdapter;
-import com.example.senomerc.adapters.NewProductsAdapter;
-import com.example.senomerc.adapters.PopularProductsAdapter;
+import com.example.senomerc.adapters.ProductsAdapter;
 import com.example.senomerc.model.CategoryModel;
 import com.example.senomerc.R;
-import com.example.senomerc.model.NewProductsModel;
-import com.example.senomerc.model.PopularProductsModel;
+import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -49,12 +44,12 @@ public class HomeFragment extends Fragment {
     List<CategoryModel> categoryModelList;
 
     // New Products RecyclerView
-    NewProductsAdapter newProductsAdapter;
-    List<NewProductsModel> newProductsModelList;
+    ProductsAdapter newProductsAdapter;
+    List<ProductsModel> newProductsModelList;
 
     // Popular Products RecyclerView
-    PopularProductsAdapter popularProductsAdapter;
-    List<PopularProductsModel> popularProductsModelList;
+    ProductsAdapter popularProductsAdapter;
+    List<ProductsModel> popularProductsModelList;
 
     // Firestore
     FirebaseFirestore db;
@@ -86,7 +81,7 @@ public class HomeFragment extends Fragment {
         popularProductRecyclerView = root.findViewById(R.id.popular_rec);
         popularProductRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         popularProductsModelList = new ArrayList<>();
-        popularProductsAdapter = new PopularProductsAdapter(getActivity(),popularProductsModelList);
+        popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList);
         popularProductRecyclerView.setAdapter(popularProductsAdapter);
 
         String string = "";
@@ -101,7 +96,7 @@ public class HomeFragment extends Fragment {
             }
             String[] arr = string.split("\\|",-1);
             if (arr.length < 5) continue;
-            popularProductsModelList.add(new PopularProductsModel(arr[0], arr[1], arr[2], Integer.parseInt(arr[3]), arr[4]));
+            popularProductsModelList.add(new ProductsModel(arr[0], arr[1], arr[2], Integer.parseInt(arr[3]), arr[4]));
         }
         try {
             is.close();
@@ -114,7 +109,7 @@ public class HomeFragment extends Fragment {
         newProductRecyclerView = root.findViewById(R.id.new_product_rec);
         newProductRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
         newProductsModelList = new ArrayList<>();
-        newProductsAdapter = new NewProductsAdapter(getActivity(),newProductsModelList);
+        newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList);
         newProductRecyclerView.setAdapter(newProductsAdapter);
 
         db.collection("Product")
@@ -125,7 +120,7 @@ public class HomeFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                NewProductsModel newProductsModel = document.toObject(NewProductsModel.class);
+                                ProductsModel newProductsModel = document.toObject(ProductsModel.class);
                                 newProductsModelList.add(newProductsModel);
                                 newProductsAdapter.notifyDataSetChanged();
 

@@ -14,17 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.senomerc.R;
 import com.example.senomerc.activities.DetailedActivity;
-import com.example.senomerc.model.NewProductsModel;
-import com.example.senomerc.model.PopularProductsModel;
+import com.example.senomerc.model.ProductsModel;
 
 import java.util.List;
 
-public class PopularProductsAdapter extends RecyclerView.Adapter < PopularProductsAdapter.ViewHolder >  {
+public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.ViewHolder >  {
 
     private Context context;
-    private List<PopularProductsModel> list;
+    private List<ProductsModel> list;
 
-    public PopularProductsAdapter(Context context, List<PopularProductsModel> list) {
+    public ProductsAdapter(Context context, List<ProductsModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -32,22 +31,25 @@ public class PopularProductsAdapter extends RecyclerView.Adapter < PopularProduc
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.popular_products,parent,false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.new_products,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
-        holder.name.setText(list.get(position).getName());
-        holder.price.setText(String.valueOf(list.get(position).getPrice()));
 
-        PopularProductsModel popularProductsModel = list.get(position);
+        /*Glide.with(context).load(context.getResources().getIdentifier(list.get(position).getImg_url(), "drawable", context.getPackageName()))
+                .into(holder.newImg);*/
+        Glide.with(context).load(list.get(position).getImg_url()).into(holder.newImg);
+        holder.newName.setText(list.get(position).getName());
+        holder.newPrice.setText(String.valueOf(list.get(position).getPrice()));
+
+        ProductsModel newProductsModel = list.get(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailedActivity.class);
-                intent.putExtra("product", popularProductsModel);
+                intent.putExtra("product", newProductsModel);
 
                 context.startActivity(intent);
             }
@@ -61,15 +63,15 @@ public class PopularProductsAdapter extends RecyclerView.Adapter < PopularProduc
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView img;
-        TextView name, price;
+        ImageView newImg;
+        TextView newName, newPrice;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            img = itemView.findViewById(R.id.all_img);
-            name = itemView.findViewById(R.id.all_product_name);
-            price = itemView.findViewById(R.id.all_price);
+            newImg = itemView.findViewById(R.id.new_img);
+            newName = itemView.findViewById(R.id.new_product_name);
+            newPrice = itemView.findViewById(R.id.new_price);
         }
     }
 }

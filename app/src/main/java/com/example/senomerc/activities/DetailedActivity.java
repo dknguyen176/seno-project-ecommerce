@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.senomerc.R;
-import com.example.senomerc.model.NewProductsModel;
-import com.example.senomerc.model.PopularProductsModel;
+import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,8 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-
-import android.content.Context;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -41,8 +37,7 @@ public class DetailedActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore;
 
-    private NewProductsModel newProductsModel = null;
-    private PopularProductsModel popularProductsModel = null;
+    private ProductsModel productsModel = null;
 
     Toolbar toolbar;
 
@@ -55,11 +50,7 @@ public class DetailedActivity extends AppCompatActivity {
 
         final Object obj = getIntent().getSerializableExtra("product");
 
-        if (obj instanceof NewProductsModel){
-            newProductsModel = (NewProductsModel) obj;
-        } else if (obj instanceof PopularProductsModel){
-            popularProductsModel = (PopularProductsModel) obj;
-        }
+        productsModel = (ProductsModel) obj;
 
         toolbar = findViewById(R.id.home_toolbar);
         setSupportActionBar(toolbar);
@@ -88,19 +79,12 @@ public class DetailedActivity extends AppCompatActivity {
         addToCart = findViewById(R.id.btn_addToCart);
 
         // Set view's content here
-        if (newProductsModel != null){
-            Glide.with(this).load(newProductsModel.getImg_url()).into(detailedImg);
-            name.setText(newProductsModel.getName());
-            description.setText(newProductsModel.getDescription());
-            price.setText(String.valueOf(newProductsModel.getPrice()));
-            rating.setRating(Float.parseFloat(newProductsModel.getRating()));
-        }
-        else if (popularProductsModel != null){
-            Glide.with(this).load(popularProductsModel.getImg_url()).into(detailedImg);
-            name.setText(popularProductsModel.getName());
-            description.setText(popularProductsModel.getDescription());
-            price.setText(String.valueOf(popularProductsModel.getPrice()));
-            rating.setRating(Float.parseFloat(popularProductsModel.getRating()));
+        if (productsModel != null){
+            Glide.with(this).load(productsModel.getImg_url()).into(detailedImg);
+            name.setText(productsModel.getName());
+            description.setText(productsModel.getDescription());
+            price.setText(String.valueOf(productsModel.getPrice()));
+            rating.setRating(Float.parseFloat(productsModel.getRating()));
         }
 
         // Set on click listener

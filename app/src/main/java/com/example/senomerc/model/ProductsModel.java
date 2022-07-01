@@ -2,7 +2,7 @@ package com.example.senomerc.model;
 
 import java.io.Serializable;
 
-public class PopularProductsModel implements Serializable {
+public class ProductsModel implements Serializable {
 
     String description;
     String name;
@@ -10,11 +10,11 @@ public class PopularProductsModel implements Serializable {
     int price;
     String img_url;
 
-    public PopularProductsModel() {
+    public ProductsModel() {
 
     }
 
-    public PopularProductsModel(String description, String name, String rating, int price, String img_url) {
+    public ProductsModel(String description, String name, String rating, int price, String img_url) {
         this.description = description;
         this.name = name;
         this.rating = rating;
