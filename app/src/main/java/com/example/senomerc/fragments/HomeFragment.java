@@ -2,6 +2,7 @@ package com.example.senomerc.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -25,6 +27,11 @@ import com.example.senomerc.model.CategoryModel;
 import com.example.senomerc.R;
 import com.example.senomerc.model.NewProductsModel;
 import com.example.senomerc.model.PopularProductsModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,6 +56,9 @@ public class HomeFragment extends Fragment {
     PopularProductsAdapter popularProductsAdapter;
     List<PopularProductsModel> popularProductsModelList;
 
+    // Firestore
+    FirebaseFirestore db;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -58,6 +68,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        db = FirebaseFirestore.getInstance();
 
         createImageSlider(root);
 
@@ -105,25 +117,24 @@ public class HomeFragment extends Fragment {
         newProductsAdapter = new NewProductsAdapter(getActivity(),newProductsModelList);
         newProductRecyclerView.setAdapter(newProductsAdapter);
 
-        String string = "";
-        InputStream is = this.getResources().openRawResource(R.raw.newproducts_list_items);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        while (true) {
-            try {
-                if ((string = reader.readLine()) == null) break;
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            String[] arr = string.split("\\|",-1);
-            if (arr.length < 5) continue;
-            newProductsModelList.add(new NewProductsModel(arr[0], arr[1], arr[2], Integer.parseInt(arr[3]), arr[4]));
-        }
-        try {
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        db.collection("Product")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                NewProductsModel newProductsModel = document.toObject(NewProductsModel.class);
+                                newProductsModelList.add(newProductsModel);
+                                newProductsAdapter.notifyDataSetChanged();
+
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
 
