@@ -97,17 +97,16 @@ public class DetailedActivity extends AppCompatActivity {
     }
 
     private void onClickAddToCart() {
-        SimpleDateFormat dateFormater = new SimpleDateFormat("MM dd, yyyy");
-        SimpleDateFormat timeFormater = new SimpleDateFormat("HH:mm:ss a");
-
-        String currentTime = timeFormater.format(Calendar.getInstance().getTime());
-        String currentDate = dateFormater.format(Calendar.getInstance().getTime());
-
         final HashMap<String, Object> cartMap = new HashMap<>();
         cartMap.put("productName", name.getText().toString());
         cartMap.put("productPrice", price.getText().toString());
-        cartMap.put("currentTime", currentTime);
-        cartMap.put("currentDate", currentDate);
+
+
+        cartMap.put("img_url", productsModel.getImg_url());
+        cartMap.put("name", name.getText());
+        cartMap.put("price", Integer.parseInt(price.getText().toString()));
+        cartMap.put("quantity", 1);
+        cartMap.put("totalPrice", Integer.parseInt(price.getText().toString()));
 
         firestore.collection("AddToCart")
                 .add(cartMap)

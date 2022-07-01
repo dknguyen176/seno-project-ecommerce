@@ -1,36 +1,30 @@
 package com.example.senomerc.model;
 
 public class MyCartModel {
-    String cur_time;
-    String cur_date;
+
+    String img_url;
     String name;
-    String price;
-    String quantity;
+    int price;
+    int quantity;
     int totalPrice;
 
-    public MyCartModel(String cur_time, String cur_date, String name, String price, String quantity, int totalPrice) {
-        this.cur_time = cur_time;
-        this.cur_date = cur_date;
+    public MyCartModel() {
+    }
+
+    public MyCartModel(String img_url, String name, int price, int quantity, int totalPrice) {
+        this.img_url = img_url;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
     }
 
-    public String getCur_time() {
-        return cur_time;
+    public String getImg_url() {
+        return img_url;
     }
 
-    public void setCur_time(String cur_time) {
-        this.cur_time = cur_time;
-    }
-
-    public String getCur_date() {
-        return cur_date;
-    }
-
-    public void setCur_date(String cur_date) {
-        this.cur_date = cur_date;
+    public void setImg_url(String img_url) {
+        this.img_url = img_url;
     }
 
     public String getName() {
@@ -41,19 +35,19 @@ public class MyCartModel {
         this.name = name;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

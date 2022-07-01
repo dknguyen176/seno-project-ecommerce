@@ -37,8 +37,6 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        /*Glide.with(context).load(context.getResources().getIdentifier(list.get(position).getImg_url(), "drawable", context.getPackageName()))
-                .into(holder.newImg);*/
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.newImg);
         holder.newName.setText(list.get(position).getName());
         holder.newPrice.setText(String.valueOf(list.get(position).getPrice()));
