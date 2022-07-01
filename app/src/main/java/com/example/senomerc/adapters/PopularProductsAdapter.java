@@ -1,6 +1,7 @@
 package com.example.senomerc.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.senomerc.R;
+import com.example.senomerc.activities.DetailedActivity;
+import com.example.senomerc.model.NewProductsModel;
 import com.example.senomerc.model.PopularProductsModel;
 
 import java.util.List;
@@ -37,6 +40,18 @@ public class PopularProductsAdapter extends RecyclerView.Adapter < PopularProduc
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
         holder.name.setText(list.get(position).getName());
         holder.price.setText(String.valueOf(list.get(position).getPrice()));
+
+        PopularProductsModel popularProductsModel = list.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DetailedActivity.class);
+                intent.putExtra("product", popularProductsModel);
+
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
