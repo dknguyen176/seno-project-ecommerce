@@ -2,10 +2,13 @@ package com.example.senomerc.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,6 +44,8 @@ public class DetailedActivity extends AppCompatActivity {
     private NewProductsModel newProductsModel = null;
     private PopularProductsModel popularProductsModel = null;
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +61,19 @@ public class DetailedActivity extends AppCompatActivity {
             popularProductsModel = (PopularProductsModel) obj;
         }
 
-        getSupportActionBar().hide();
+        toolbar = findViewById(R.id.home_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        firestore = FirebaseFirestore.getInstance();
 
         onBindView();
     }
@@ -99,8 +116,8 @@ public class DetailedActivity extends AppCompatActivity {
         SimpleDateFormat dateFormater = new SimpleDateFormat("MM dd, yyyy");
         SimpleDateFormat timeFormater = new SimpleDateFormat("HH:mm:ss a");
 
-        String currentTime = timeFormater.format(Calendar.getInstance());
-        String currentDate = dateFormater.format(Calendar.getInstance());
+        String currentTime = timeFormater.format(Calendar.getInstance().getTime());
+        String currentDate = dateFormater.format(Calendar.getInstance().getTime());
 
         final HashMap<String, Object> cartMap = new HashMap<>();
         cartMap.put("productName", name.getText().toString());
@@ -114,7 +131,26 @@ public class DetailedActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
                         Toast.makeText(DetailedActivity.this, "Added To Cart", Toast.LENGTH_SHORT);
+                        finish();
                     }
                 });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_cart) {
+            startActivity(new Intent(this, CartActivity.class));
+        }
+
+        return true;
+    }
+
 }

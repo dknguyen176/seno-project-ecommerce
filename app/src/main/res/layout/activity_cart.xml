@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="My Cart"
         app:titleTextColor="#000000"/>
-    
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="0dp"
@@ -36,7 +36,7 @@
         android:padding="18dp"
         android:fontFamily="@font/amethysta"
         app:titleTextColor="#000000"/>
-    
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cart_rec"
         android:layout_width="0dp"
