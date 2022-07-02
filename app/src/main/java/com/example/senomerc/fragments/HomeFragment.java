@@ -65,8 +65,6 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-        createImageSlider(root);
-
         createCategoryList(root);
 
         createNewProductsList(root);
@@ -185,17 +183,6 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
-    }
-
-    private void createImageSlider(View root) {
-        ImageSlider imageSlider = root.findViewById(R.id.image_slider);
-        List<SlideModel> slideModels = new ArrayList<>();
-
-        slideModels.add(new SlideModel(R.drawable.banner1, "Banner 1", ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.banner2, "Banner 2", ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.banner3, "Banner 3", ScaleTypes.FIT));
-
-        imageSlider.setImageList(slideModels);
     }
 
 }
