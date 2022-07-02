@@ -1,7 +1,10 @@
 package com.example.senomerc.adapters;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +20,18 @@ import com.bumptech.glide.Glide;
 import com.example.senomerc.R;
 import com.example.senomerc.activities.DetailedActivity;
 import com.example.senomerc.model.MyCartModel;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHolder >  {
@@ -27,9 +41,12 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
 
     int totalAmount;
 
+    private FirebaseFirestore firestore;
+
     public MyCartAdapter(Context context, List<MyCartModel> list) {
         this.context = context;
         this.list = list;
+        this.firestore = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -71,6 +88,13 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     intent.putExtra("totalAmount", totalAmount);
 
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                    firestore.collection("AddToCart")
+                            .document(list.get(position).getDocumentId())
+                            .update("quantity", count);
+                    firestore.collection("AddToCart")
+                            .document(list.get(position).getDocumentId())
+                            .update("totalPrice", totalPrice);
                 }
             }
         });
@@ -90,6 +114,14 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     intent.putExtra("totalAmount", totalAmount);
 
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                    firestore.collection("AddToCart")
+                            .document(list.get(position).getDocumentId())
+                            .update("quantity", count);
+                    firestore.collection("AddToCart")
+                            .document(list.get(position).getDocumentId())
+                            .update("totalPrice", totalPrice);
+
                 }
             }
         });
@@ -97,7 +129,25 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                totalAmount = 0;
 
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                firestore.collection("AddToCart")
+                            .document(list.get(position).getDocumentId())
+                            .delete()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        list.remove(holder.getAdapterPosition());
+                                        notifyDataSetChanged();
+                                    }
+                                    else {
+
+                                    }
+                                }
+                            });
             }
         });
     }
