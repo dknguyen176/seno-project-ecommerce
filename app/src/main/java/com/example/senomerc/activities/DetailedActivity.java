@@ -95,7 +95,7 @@ public class DetailedActivity extends AppCompatActivity {
             rating.setRating(Float.parseFloat(productsModel.getRating()));
             description.setText(productsModel.getDescription());
             price.setText(Currency.toVND(price1));
-            addToCart.setText(Currency.toVND(price1));
+            addToCart.setText(Currency.toVND(price1) + " - Add to Cart");
             quantity.setText("1");
         } else {
             price1 = 0;
@@ -117,7 +117,7 @@ public class DetailedActivity extends AppCompatActivity {
                     count = count + 1;
                     int totalPrice = price1 * count;
                     quantity.setText(String.valueOf(count));
-                    addToCart.setText(Currency.toVND(totalPrice));
+                    addToCart.setText(Currency.toVND(totalPrice) + " - Add to Cart");
                 }
             }
         });
@@ -129,7 +129,7 @@ public class DetailedActivity extends AppCompatActivity {
                     count = count - 1;
                     int totalPrice = price1 * count;
                     quantity.setText(String.valueOf(count));
-                    addToCart.setText(Currency.toVND(totalPrice));
+                    addToCart.setText(Currency.toVND(totalPrice) + " - Add to Cart");
                 }
             }
         });
@@ -167,6 +167,10 @@ public class DetailedActivity extends AppCompatActivity {
 
         if (id == R.id.menu_cart) {
             startActivity(new Intent(this, CartActivity.class));
+        }
+
+        if (id == R.id.map) {
+            startActivity(new Intent(this, MapsActivity.class));
         }
 
         return true;

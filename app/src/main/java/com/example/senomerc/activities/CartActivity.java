@@ -119,6 +119,10 @@ public class CartActivity extends AppCompatActivity {
             startActivity(new Intent(this, CartActivity.class));
         }*/
 
+        if (id == R.id.map) {
+            startActivity(new Intent(this, MapsActivity.class));
+        }
+
         return true;
     }
 }

@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, CartActivity.class));
         }
 
+        if (id == R.id.map) {
+            startActivity(new Intent(MainActivity.this, MapsActivity.class));
+        }
+
         return true;
     }
 }

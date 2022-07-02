@@ -29,8 +29,9 @@ import java.util.List;
 public class AllProductsActivity extends AppCompatActivity {
 
     Toolbar toolbar;
-    TextView result;
+    TextView result, title;
     int count;
+    String category;
 
     RecyclerView productRecyclerView;
     ProductsAdapter productsAdapter;
@@ -46,6 +47,13 @@ public class AllProductsActivity extends AppCompatActivity {
         createToolbar();
 
         createProductView();
+
+        createTitle();
+    }
+
+    private void createTitle() {
+        title = findViewById(R.id.title);
+        title.setText(category);
     }
 
     private void createProductView() {
@@ -55,6 +63,7 @@ public class AllProductsActivity extends AppCompatActivity {
         String db_url = intent.getStringExtra("db_url");
         String specAttr = intent.getStringExtra("specAttr");
         String category = intent.getStringExtra("category");
+        this.category = category;
 
         productRecyclerView = findViewById(R.id.product_rec);
         productRecyclerView.setLayoutManager(new GridLayoutManager(AllProductsActivity.this,2));
@@ -145,6 +154,10 @@ public class AllProductsActivity extends AppCompatActivity {
 
         if (id == R.id.menu_cart) {
             startActivity(new Intent(this, CartActivity.class));
+        }
+
+        if (id == R.id.map) {
+            startActivity(new Intent(this, MapsActivity.class));
         }
 
         return true;
