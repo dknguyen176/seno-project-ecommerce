@@ -45,7 +45,7 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
         holder.name.setText(list.get(position).getName());
         holder.price.setText(Currency.toVND(list.get(position).getPrice()));
-        //holder.specAttr.setText(specialAttr);
+        // holder.specAttr.setText(specialAttr);
 
         ProductsModel newProductsModel = list.get(position);
 

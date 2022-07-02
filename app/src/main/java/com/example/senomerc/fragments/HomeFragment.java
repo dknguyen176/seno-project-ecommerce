@@ -19,6 +19,7 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 
+import com.example.senomerc.activities.AllCategoryActivity;
 import com.example.senomerc.activities.AllProductsActivity;
 import com.example.senomerc.adapters.CategoryAdapter;
 import com.example.senomerc.adapters.ProductsAdapter;
@@ -101,6 +102,15 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        TextView categorySeeAll = root.findViewById(R.id.category_see_all);
+
+        categorySeeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AllCategoryActivity.class));
+            }
+        });
     }
 
     private void createPopularProductsList(View root) {
@@ -162,7 +172,7 @@ public class HomeFragment extends Fragment {
         catRecyclerView = root.findViewById(R.id.rec_category);
         catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
         categoryModelList = new ArrayList<>();
-        categoryAdapter = new CategoryAdapter(getActivity(),categoryModelList);
+        categoryAdapter = new CategoryAdapter(getActivity(),categoryModelList,R.layout.category_list);
         catRecyclerView.setAdapter(categoryAdapter);
 
         db.collection("Category")

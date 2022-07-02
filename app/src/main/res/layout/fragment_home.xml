@@ -28,12 +28,47 @@
                 android:src="@drawable/dragonmaid"/>
         </androidx.cardview.widget.CardView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:fontFamily="@font/overlock_black"
+                android:text="Category"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/category_see_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="25dp"
+                android:fontFamily="@font/overlock"
+                android:text="See all"
+                android:layout_alignParentBottom="true"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="5dp"
             android:layout_marginHorizontal="15dp"/>
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

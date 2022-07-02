@@ -54,6 +54,7 @@ public class AllProductsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String db_url = intent.getStringExtra("db_url");
         String specAttr = intent.getStringExtra("specAttr");
+        String category = intent.getStringExtra("category");
 
         productRecyclerView = findViewById(R.id.product_rec);
         productRecyclerView.setLayoutManager(new GridLayoutManager(AllProductsActivity.this,2));
@@ -61,26 +62,49 @@ public class AllProductsActivity extends AppCompatActivity {
         productsAdapter = new ProductsAdapter(AllProductsActivity.this,productsList, specAttr, R.layout.product_large);
         productRecyclerView.setAdapter(productsAdapter);
 
-        db.collection(db_url)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            count = task.getResult().size();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+        if (category != null) {
+            db.collection(db_url).whereEqualTo("type", category)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                count = task.getResult().size();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                ProductsModel productsModel = document.toObject(ProductsModel.class);
-                                productsList.add(productsModel);
-                                productsAdapter.notifyDataSetChanged();
+                                    ProductsModel productsModel = document.toObject(ProductsModel.class);
+                                    productsList.add(productsModel);
+                                    productsAdapter.notifyDataSetChanged();
 
+                                }
+                                createResults();
+                            } else {
+                                Toast.makeText(AllProductsActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
                             }
-                            createResults();
-                        } else {
-                            Toast.makeText(AllProductsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+        } else {
+            db.collection(db_url)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                count = task.getResult().size();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                    ProductsModel productsModel = document.toObject(ProductsModel.class);
+                                    productsList.add(productsModel);
+                                    productsAdapter.notifyDataSetChanged();
+
+                                }
+                                createResults();
+                            } else {
+                                Toast.makeText(AllProductsActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 
     private void createToolbar() {
