@@ -130,10 +130,6 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                totalAmount = 0;
-
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
                 firestore.collection("AddToCart")
                             .document(list.get(position).getDocumentId())
                             .delete()
@@ -143,6 +139,13 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                                     if (task.isSuccessful()) {
                                         list.remove(holder.getAdapterPosition());
                                         notifyDataSetChanged();
+
+                                        totalAmount = 0;
+                                        if (list.size() == 0) {
+                                            Intent intent = new Intent("MyTotalAmount");
+                                            intent.putExtra("totalAmount", totalAmount);
+                                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                        }
                                     }
                                     else {
 
