@@ -24,10 +24,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/specialAttribute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#F0F8FF"
+            android:background="@color/orange"
             android:fontFamily="@font/amethysta"
             android:padding="6dp"
             android:text="New"

@@ -22,24 +22,27 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
 
     private Context context;
     private List<ProductsModel> list;
+    private String specialAttr;
 
-    public ProductsAdapter(Context context, List<ProductsModel> list) {
+    public ProductsAdapter(Context context, List<ProductsModel> list, String specialAttr) {
         this.context = context;
         this.list = list;
+        this.specialAttr = specialAttr;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.new_products,parent,false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.products,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Glide.with(context).load(list.get(position).getImg_url()).into(holder.newImg);
-        holder.newName.setText(list.get(position).getName());
-        holder.newPrice.setText(String.valueOf(list.get(position).getPrice()));
+        Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
+        holder.name.setText(list.get(position).getName());
+        holder.price.setText(String.valueOf(list.get(position).getPrice()));
+        holder.specAttr.setText(specialAttr);
 
         ProductsModel newProductsModel = list.get(position);
 
@@ -61,15 +64,16 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView newImg;
-        TextView newName, newPrice;
+        ImageView img;
+        TextView name, price, specAttr;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            newImg = itemView.findViewById(R.id.new_img);
-            newName = itemView.findViewById(R.id.new_product_name);
-            newPrice = itemView.findViewById(R.id.new_price);
+            img = itemView.findViewById(R.id.new_img);
+            name = itemView.findViewById(R.id.new_product_name);
+            price = itemView.findViewById(R.id.new_price);
+            specAttr = itemView.findViewById(R.id.specialAttribute);
         }
     }
 }
