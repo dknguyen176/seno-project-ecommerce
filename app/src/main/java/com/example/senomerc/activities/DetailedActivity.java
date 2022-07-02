@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.senomerc.R;
+import com.example.senomerc.helper.Currency;
 import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -93,8 +94,8 @@ public class DetailedActivity extends AppCompatActivity {
             name.setText(productsModel.getName());
             rating.setRating(Float.parseFloat(productsModel.getRating()));
             description.setText(productsModel.getDescription());
-            price.setText(String.format("%d.%03dđ", price1 / 1000, price1 % 1000));
-            addToCart.setText(String.format("%d.%03dđ - Add to Cart", price1/1000, price1%1000));
+            price.setText(Currency.toVND(price1));
+            addToCart.setText(Currency.toVND(price1));
             quantity.setText("1");
         } else {
             price1 = 0;
@@ -115,8 +116,8 @@ public class DetailedActivity extends AppCompatActivity {
                 if (count < 99) {
                     count = count + 1;
                     int totalPrice = price1 * count;
-                    quantity.setText(String.format("%d", count));
-                    addToCart.setText(String.format("%d.%03dđ - Add to Cart", totalPrice / 1000, totalPrice % 1000));
+                    quantity.setText(String.valueOf(count));
+                    addToCart.setText(Currency.toVND(totalPrice));
                 }
             }
         });
@@ -127,8 +128,8 @@ public class DetailedActivity extends AppCompatActivity {
                 if (count > 1) {
                     count = count - 1;
                     int totalPrice = price1 * count;
-                    quantity.setText(String.format("%d", count));
-                    addToCart.setText(String.format("%d.%03dđ - Add to Cart", totalPrice / 1000, totalPrice % 1000));
+                    quantity.setText(String.valueOf(count));
+                    addToCart.setText(Currency.toVND(totalPrice));
                 }
             }
         });

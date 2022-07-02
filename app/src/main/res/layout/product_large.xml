@@ -2,13 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="130dp"
-    android:layout_height="170dp">
+    android:layout_width="160dp"
+    android:layout_height="280dp"
+    android:layout_margin="15dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="160dp"
+        android:layout_height="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -17,8 +18,8 @@
 
         <ImageView
             android:id="@+id/new_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="160dp"
+            android:layout_height="180dp"
             android:scaleType="centerCrop"
             android:src="@drawable/milk" />
 
@@ -27,13 +28,13 @@
 
     <TextView
         android:id="@+id/new_product_name"
-        android:layout_width="100dp"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/overlock_black"
         android:text="Product Name"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,12 +44,12 @@
 
     <TextView
         android:id="@+id/new_price"
-        android:layout_width="100dp"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/overlock_black"
         android:text="34.400đ"
         android:textColor="@color/orange"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

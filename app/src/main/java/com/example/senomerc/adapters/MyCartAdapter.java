@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.senomerc.R;
 import com.example.senomerc.activities.DetailedActivity;
+import com.example.senomerc.helper.Currency;
 import com.example.senomerc.model.MyCartModel;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,7 +40,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
     private Context context;
     private List<MyCartModel> list;
 
-    int totalAmount;
+    int totalAmount = 0;
 
     private FirebaseFirestore firestore;
 
@@ -62,7 +63,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
         holder.name.setText(list.get(position).getName());
         holder.price = list.get(position).getPrice();
-        holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
+        holder.total.setText(Currency.toVND(totalPrice));
         holder.quantity.setText(String.valueOf(list.get(position).getQuantity()));
 
         // Total amount pass to Cart activity
@@ -80,8 +81,8 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                 if (count < 99) {
                     count = count + 1;
                     int totalPrice = holder.price * count;
-                    holder.quantity.setText(String.format("%d", count));
-                    holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
+                    holder.quantity.setText(String.valueOf(count));
+                    holder.total.setText(Currency.toVND(totalPrice));
 
                     totalAmount = totalAmount + holder.price;
                     Intent intent = new Intent("MyTotalAmount");
@@ -106,8 +107,8 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                 if (count > 1) {
                     count = count - 1;
                     int totalPrice = holder.price * count;
-                    holder.quantity.setText(String.format("%d", count));
-                    holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
+                    holder.quantity.setText(String.valueOf(count));
+                    holder.total.setText(Currency.toVND(totalPrice));
 
                     totalAmount = totalAmount - holder.price;
                     Intent intent = new Intent("MyTotalAmount");

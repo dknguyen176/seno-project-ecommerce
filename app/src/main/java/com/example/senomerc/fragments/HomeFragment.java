@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment {
         popularProductRecyclerView = root.findViewById(R.id.popular_rec);
         popularProductRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         popularProductsModelList = new ArrayList<>();
-        popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList,"Popular");
+        popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList,"Popular", R.layout.product_large);
         popularProductRecyclerView.setAdapter(popularProductsAdapter);
 
         db.collection("Product")
@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
         newProductRecyclerView = root.findViewById(R.id.new_product_rec);
         newProductRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
         newProductsModelList = new ArrayList<>();
-        newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList,"New");
+        newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList,"New", R.layout.products);
         newProductRecyclerView.setAdapter(newProductsAdapter);
 
         db.collection("Product")

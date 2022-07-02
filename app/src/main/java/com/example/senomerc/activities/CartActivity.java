@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.senomerc.R;
 import com.example.senomerc.adapters.MyCartAdapter;
+import com.example.senomerc.helper.Currency;
 import com.example.senomerc.model.MyCartModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -100,7 +101,7 @@ public class CartActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             int totalAmount = intent.getIntExtra("totalAmount", 0);
-            total.setText(String.format("%d.%03dđ", totalAmount / 1000, totalAmount % 1000));
+            total.setText(Currency.toVND(totalAmount));
         }
     };
 

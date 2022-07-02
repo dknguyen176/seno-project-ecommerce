@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.senomerc.R;
 import com.example.senomerc.activities.DetailedActivity;
+import com.example.senomerc.helper.Currency;
 import com.example.senomerc.model.ProductsModel;
 
 import java.util.List;
@@ -23,17 +24,19 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
     private Context context;
     private List<ProductsModel> list;
     private String specialAttr;
+    private int layoutId;
 
-    public ProductsAdapter(Context context, List<ProductsModel> list, String specialAttr) {
+    public ProductsAdapter(Context context, List<ProductsModel> list, String specialAttr, int layoutId) {
         this.context = context;
         this.list = list;
         this.specialAttr = specialAttr;
+        this.layoutId = layoutId;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.products,parent,false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId,parent,false));
     }
 
     @Override
@@ -41,8 +44,8 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
 
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
         holder.name.setText(list.get(position).getName());
-        holder.price.setText(String.valueOf(list.get(position).getPrice()));
-        holder.specAttr.setText(specialAttr);
+        holder.price.setText(Currency.toVND(list.get(position).getPrice()));
+        //holder.specAttr.setText(specialAttr);
 
         ProductsModel newProductsModel = list.get(position);
 
@@ -73,7 +76,7 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
             img = itemView.findViewById(R.id.new_img);
             name = itemView.findViewById(R.id.new_product_name);
             price = itemView.findViewById(R.id.new_price);
-            specAttr = itemView.findViewById(R.id.specialAttribute);
+            // specAttr = itemView.findViewById(R.id.specialAttribute);
         }
     }
 }

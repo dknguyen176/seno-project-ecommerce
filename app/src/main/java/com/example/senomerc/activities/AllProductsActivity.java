@@ -43,7 +43,7 @@ public class AllProductsActivity extends AppCompatActivity {
         productRecyclerView = findViewById(R.id.product_rec);
         productRecyclerView.setLayoutManager(new GridLayoutManager(AllProductsActivity.this,2));
         productsList = new ArrayList<>();
-        productsAdapter = new ProductsAdapter(AllProductsActivity.this,productsList, specAttr);
+        productsAdapter = new ProductsAdapter(AllProductsActivity.this,productsList, specAttr, R.layout.product_large);
         productRecyclerView.setAdapter(productsAdapter);
 
         db.collection(db_url)
