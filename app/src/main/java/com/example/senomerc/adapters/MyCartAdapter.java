@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +25,8 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
     private Context context;
     private List<MyCartModel> list;
 
+    int totalAmount;
+
     public MyCartAdapter(Context context, List<MyCartModel> list) {
         this.context = context;
         this.list = list;
@@ -37,6 +40,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // Set view's content
         int totalPrice = list.get(position).getTotalPrice();
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
         holder.name.setText(list.get(position).getName());
@@ -44,6 +48,14 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
         holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
         holder.quantity.setText(String.valueOf(list.get(position).getQuantity()));
 
+        // Total amount pass to Cart activity
+        totalAmount = totalAmount + totalPrice;
+        Intent intent = new Intent("MyTotalAmount");
+        intent.putExtra("totalAmount", totalAmount);
+
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+        // Set on click listener
         holder.plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +65,12 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     int totalPrice = holder.price * count;
                     holder.quantity.setText(String.format("%d", count));
                     holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
+
+                    totalAmount = totalAmount + holder.price;
+                    Intent intent = new Intent("MyTotalAmount");
+                    intent.putExtra("totalAmount", totalAmount);
+
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 }
             }
         });
@@ -66,6 +84,12 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     int totalPrice = holder.price * count;
                     holder.quantity.setText(String.format("%d", count));
                     holder.total.setText(String.format("%d.%03dđ", totalPrice / 1000, totalPrice % 1000));
+
+                    totalAmount = totalAmount - holder.price;
+                    Intent intent = new Intent("MyTotalAmount");
+                    intent.putExtra("totalAmount", totalAmount);
+
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 }
             }
         });

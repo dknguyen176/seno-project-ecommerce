@@ -24,49 +24,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/home_toolbar" />
 
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/checkout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cart_rec">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:fontFamily="@font/overlock_bold"
-            android:text="Total"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:fontFamily="@font/overlock_black"
-            android:text="140.000đ"
-            android:textSize="35sp" />
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/checkout"
-        android:layout_width="280dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/roundedbutton2"
-        android:fontFamily="@font/overlock_bold"
-        android:text="Proceed To Checkout"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:backgroundTint="@color/orange"
+        app:layout_constraintTop_toBottomOf="@+id/cart_rec"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginHorizontal="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="@font/overlock_bold"
+                android:text="Total"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="@font/overlock_black"
+                android:text="140.000đ"
+                android:textColor="@color/orange"
+                android:textSize="28sp" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/checkout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/roundedbutton"
+            android:fontFamily="@font/overlock_bold"
+            android:text="Proceed To Checkout"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            app:backgroundTint="@color/orange" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
