@@ -98,12 +98,19 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="20dp">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_addToCart"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
             <ImageButton
                 android:id="@+id/cart_remove"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
                 android:background="@drawable/icons8_minus_100"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -133,7 +140,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cart_quantity"
                 app:layout_constraintTop_toTopOf="parent" />
-
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <Button
                 android:id="@+id/btn_addToCart"
                 android:layout_width="220dp"

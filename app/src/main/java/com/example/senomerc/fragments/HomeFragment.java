@@ -84,25 +84,24 @@ public class HomeFragment extends Fragment {
         popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList);
         popularProductRecyclerView.setAdapter(popularProductsAdapter);
 
-        String string = "";
-        InputStream is = this.getResources().openRawResource(R.raw.newproducts_list_items);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        while (true) {
-            try {
-                if ((string = reader.readLine()) == null) break;
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            String[] arr = string.split("\\|",-1);
-            if (arr.length < 5) continue;
-            popularProductsModelList.add(new ProductsModel(arr[0], arr[1], arr[2], Integer.parseInt(arr[3]), arr[4]));
-        }
-        try {
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        db.collection("Product")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
+                                popularProductsModelList.add(popularProductsModel);
+                                popularProductsAdapter.notifyDataSetChanged();
+
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void createNewProductsList(View root) {
@@ -140,25 +139,23 @@ public class HomeFragment extends Fragment {
         categoryAdapter = new CategoryAdapter(getActivity(),categoryModelList);
         catRecyclerView.setAdapter(categoryAdapter);
 
-        String string = "";
-        InputStream is = this.getResources().openRawResource(R.raw.category_list_items);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        while (true) {
-            try {
-                if ((string = reader.readLine()) == null) break;
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            String[] arr = string.split("\\|",-1);
-            if (arr.length < 3) continue;
-            categoryModelList.add(new CategoryModel(arr[0], arr[1], arr[2]));
-        }
-        try {
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        db.collection("Category")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                CategoryModel categoryModel = document.toObject(CategoryModel.class);
+                                categoryModelList.add(categoryModel);
+                                categoryAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
     }
 
