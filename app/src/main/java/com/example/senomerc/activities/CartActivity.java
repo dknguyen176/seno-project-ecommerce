@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ public class CartActivity extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recyclerView;
     TextView total;
+    Button checkOut;
 
     List<MyCartModel> cartModelList;
     MyCartAdapter cartAdapter;
@@ -55,6 +57,41 @@ public class CartActivity extends AppCompatActivity {
         //auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
+        createList();
+
+        createToolbar();
+
+        createCheckout();
+    }
+
+    private void createCheckout() {
+        checkOut = findViewById(R.id.checkout);
+        checkOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    for(MyCartModel cartModel : cartModelList) {
+                        firestore.collection("AddToCart")
+                                .document(cartModel.getDocumentId())
+                                .delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                    }
+                                });
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error deleting collection : " + e.getMessage());
+                }
+
+                startActivity(new Intent(CartActivity.this, SuccessActivity.class));
+                finish();
+            }
+        });
+    }
+
+    private void createToolbar() {
         toolbar = findViewById(R.id.home_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,7 +102,9 @@ public class CartActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
 
+    private void createList() {
         total = findViewById(R.id.total);
 
         recyclerView = findViewById(R.id.cart_rec);
@@ -107,7 +146,7 @@ public class CartActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.cart_menu, menu);
         return true;
     }
 

@@ -23,6 +23,7 @@
         android:layout_marginVertical="15dp"
         android:textSize="20sp"
         android:gravity="center"
+        android:textColor="@color/grey"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -96,7 +97,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/overlock_black"
                 android:text="34.400đ"
-                android:textColor="@color/orange"
+                android:textColor="@color/pink"
                 android:textSize="23sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +129,6 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_addToCart"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
@@ -150,7 +150,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:fontFamily="@font/roboto_bold"
                 android:text="10"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cart_remove"
@@ -179,10 +179,10 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="15sp"
-            app:backgroundTint="@color/orange"
+            app:backgroundTint="@color/pink"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,7 @@
         android:layout_height="30dp"
         android:layout_marginVertical="10dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/textfx"
+        android:src="@drawable/senox"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
