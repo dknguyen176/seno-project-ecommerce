@@ -15,9 +15,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.senomerc.R;
 import com.example.senomerc.databinding.ActivityMapsBinding;
+import com.example.senomerc.model.CategoryModel;
+import com.example.senomerc.model.ProductsModel;
 import com.example.senomerc.model.Store;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +29,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,11 +48,15 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     Toolbar toolbar;
 
+    FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        stores = new ArrayList<>();
 
         toolbar = findViewById(R.id.home_toolbar);
         setSupportActionBar(toolbar);
@@ -82,43 +94,53 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         mMap.setMinZoomPreference(15.0f);
         mMap.setMaxZoomPreference(20.0f);
 
-        stores = new ArrayList<>();
         markers = new ArrayList<>();
-
-        stores.add(new Store(10.762910922087965, 106.68217050135999, "Store 1", "227 Nguyen Van Cu, Phuong 4, Quan 5, TPHCM"));
-        stores.add(new Store(10.875651138778734, 106.79916558196608, "Store 2", "VQGX+7M3, Phuong Linh Trung, TP Thu Duc, TPHCM"));
-
+        stores = new ArrayList<>();
         List<String> names = new ArrayList<>();
 
-        for (int i = 0; i < stores.size(); ++i) {
-            LatLng coordinate = new LatLng(stores.get(i).getLatitude(), stores.get(i).getLongitude());
-            if (i == 0)
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 17.0f));
-            names.add(stores.get(i).getName());
-            markers.add(mMap.addMarker(new MarkerOptions()
-                    .title(stores.get(i).getName())
-                    .position(coordinate)
-                    .draggable(false)
-                    .alpha(1f)));
-        }
+        db = FirebaseFirestore.getInstance();
 
-        Spinner dropdown = findViewById(R.id.locationSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, names.toArray(new String[0]));
-        dropdown.setAdapter(adapter);
+        db.collection("Locations").orderBy("name")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Store store = document.toObject(Store.class);
 
-        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markers.get(position).getPosition(), 17.0f));
-                TextView textView = findViewById(R.id.addressText);
-                textView.setText(stores.get(position).getAddress());
-            }
+                                LatLng coordinate = new LatLng(store.getLatitude(), store.getLongitude());
+                                stores.add(store);
+                                names.add(store.getName());
+                                markers.add(mMap.addMarker(new MarkerOptions()
+                                        .title(store.getName())
+                                        .position(coordinate)
+                                        .draggable(false)
+                                        .alpha(1f)));
+                            }
+                            Spinner dropdown = findViewById(R.id.locationSpinner);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                    MapsActivity.this,
+                                    android.R.layout.simple_spinner_dropdown_item,
+                                    names.toArray(new String[0]));
+                            dropdown.setAdapter(adapter);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                            dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markers.get(position).getPosition(), 17.0f));
+                                    TextView textView = findViewById(R.id.addressText);
+                                    textView.setText(stores.get(position).getAddress());
+                                }
 
-            }
-        });
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+                        }
+                    }
+                });
 
         mMap.setOnMarkerClickListener(this);
     }

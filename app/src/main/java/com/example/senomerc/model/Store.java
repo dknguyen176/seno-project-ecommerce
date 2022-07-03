@@ -1,9 +1,16 @@
 package com.example.senomerc.model;
 
-public class Store {
-    private double latitude, longitude;
-    private String name;
-    private String address;
+import java.io.Serializable;
+
+public class Store implements Serializable {
+
+    double latitude, longitude;
+    String name;
+    String address;
+
+    public Store() {
+
+    }
 
     public Store(double latitude, double longitude, String name, String address) {
         this.latitude = latitude;
