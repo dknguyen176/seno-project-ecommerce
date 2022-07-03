@@ -85,6 +85,7 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), AllProductsActivity.class);
                 intent.putExtra("db_url", "Product");
                 intent.putExtra("specAttr", "New");
+                intent.putExtra("limit", 4);
 
                 startActivity(intent);
             }
@@ -98,7 +99,8 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), AllProductsActivity.class);
                 intent.putExtra("db_url", "Product");
                 intent.putExtra("specAttr", "Popular");
-
+                intent.putExtra("order_by", "rating");
+                intent.putExtra("limit", -4);
                 startActivity(intent);
             }
         });
@@ -120,7 +122,7 @@ public class HomeFragment extends Fragment {
         popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList,"Popular", R.layout.product_large);
         popularProductRecyclerView.setAdapter(popularProductsAdapter);
 
-        db.collection("Product")
+        db.collection("Product").orderBy("rating").limitToLast(4)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -147,7 +149,7 @@ public class HomeFragment extends Fragment {
         newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList,"New", R.layout.products);
         newProductRecyclerView.setAdapter(newProductsAdapter);
 
-        db.collection("Product")
+        db.collection("Product").limit(4)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

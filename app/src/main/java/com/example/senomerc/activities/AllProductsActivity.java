@@ -19,7 +19,9 @@ import com.example.senomerc.adapters.ProductsAdapter;
 import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -63,6 +65,8 @@ public class AllProductsActivity extends AppCompatActivity {
         String db_url = intent.getStringExtra("db_url");
         String specAttr = intent.getStringExtra("specAttr");
         String category = intent.getStringExtra("category");
+        String order_by = intent.getStringExtra("order_by");
+        int limit = intent.getIntExtra("limit", 0);
         this.category = category;
 
         productRecyclerView = findViewById(R.id.product_rec);
@@ -71,49 +75,31 @@ public class AllProductsActivity extends AppCompatActivity {
         productsAdapter = new ProductsAdapter(AllProductsActivity.this,productsList, specAttr, R.layout.product_large);
         productRecyclerView.setAdapter(productsAdapter);
 
-        if (category != null) {
-            db.collection(db_url).whereEqualTo("type", category)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                count = task.getResult().size();
-                                for (QueryDocumentSnapshot document : task.getResult()) {
+        Query query = db.collection(db_url);
 
-                                    ProductsModel productsModel = document.toObject(ProductsModel.class);
-                                    productsList.add(productsModel);
-                                    productsAdapter.notifyDataSetChanged();
+        if (category != null) query = query.whereEqualTo("type", category);
+        if (order_by != null) query = query.orderBy(order_by);
+        if (limit > 0) query = query.limit(limit);
+        else if (limit < 0) query = query.limitToLast(limit);
 
-                                }
-                                createResults();
-                            } else {
-                                Toast.makeText(AllProductsActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        } else {
-            db.collection(db_url)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                count = task.getResult().size();
-                                for (QueryDocumentSnapshot document : task.getResult()) {
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    count = task.getResult().size();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                    ProductsModel productsModel = document.toObject(ProductsModel.class);
-                                    productsList.add(productsModel);
-                                    productsAdapter.notifyDataSetChanged();
+                        ProductsModel productsModel = document.toObject(ProductsModel.class);
+                        productsList.add(productsModel);
+                        productsAdapter.notifyDataSetChanged();
 
-                                }
-                                createResults();
-                            } else {
-                                Toast.makeText(AllProductsActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }
+                    }
+                    createResults();
+                } else {
+                    Toast.makeText(AllProductsActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void createToolbar() {
