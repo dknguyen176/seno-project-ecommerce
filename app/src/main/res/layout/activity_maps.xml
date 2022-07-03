@@ -27,6 +27,7 @@
             android:layout_marginHorizontal="15dp"
             android:fontFamily="@font/overlock_bold"
             android:text="Select a location:"
+            android:textColor="@color/black"
             android:textSize="25sp" />
 
         <Spinner
@@ -50,6 +51,7 @@
             android:layout_marginBottom="15dp"
             android:fontFamily="@font/overlock_bold"
             android:text="Address:"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <TextView

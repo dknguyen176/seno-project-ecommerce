@@ -33,7 +33,7 @@ public class AllProductsActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView result, title;
     int count;
-    String category;
+    String category, specAttr;
 
     RecyclerView productRecyclerView;
     ProductsAdapter productsAdapter;
@@ -55,7 +55,12 @@ public class AllProductsActivity extends AppCompatActivity {
 
     private void createTitle() {
         title = findViewById(R.id.title);
-        title.setText(category);
+        if (category != null && !category.isEmpty())
+            title.setText(category);
+        else if (specAttr != null && !specAttr.isEmpty())
+            title.setText(specAttr);
+        else
+            title.setText("All");
     }
 
     private void createProductView() {
@@ -67,7 +72,9 @@ public class AllProductsActivity extends AppCompatActivity {
         String category = intent.getStringExtra("category");
         String order_by = intent.getStringExtra("order_by");
         int limit = intent.getIntExtra("limit", 0);
+
         this.category = category;
+        this.specAttr = specAttr;
 
         productRecyclerView = findViewById(R.id.product_rec);
         productRecyclerView.setLayoutManager(new GridLayoutManager(AllProductsActivity.this,2));
@@ -80,7 +87,7 @@ public class AllProductsActivity extends AppCompatActivity {
         if (category != null) query = query.whereEqualTo("type", category);
         if (order_by != null) query = query.orderBy(order_by);
         if (limit > 0) query = query.limit(limit);
-        else if (limit < 0) query = query.limitToLast(limit);
+        else if (limit < 0) query = query.limitToLast(-limit);
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
