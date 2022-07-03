@@ -4,4 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sample_description">Adventure Time[c] is an American fantasy animated television series created by Pendleton Ward for Cartoon Network. The series follows the adventures of a boy named Finn (Jeremy Shada) and his best friend and adoptive brother Jake (John DiMaggio)—a dog with the magical power to change size and shape at will.</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="btn_label">Show menu</string>
+    <string name="item1">Item 1</string>
+    <string name="item2">Item 2</string>
 </resources>

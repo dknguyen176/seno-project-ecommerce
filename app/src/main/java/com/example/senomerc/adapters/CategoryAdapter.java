@@ -49,7 +49,7 @@ public class CategoryAdapter extends RecyclerView.Adapter < CategoryAdapter.View
                 Intent intent = new Intent(context, AllProductsActivity.class);
                 intent.putExtra("db_url", "Product");
                 intent.putExtra("specAttr", "");
-                intent.putExtra("category", name);
+                if (name.compareToIgnoreCase("all") != 0) intent.putExtra("category", name);
 
                 context.startActivity(intent);
             }

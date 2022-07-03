@@ -1,13 +1,14 @@
 package com.example.senomerc.activities;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.senomerc.R;
 import com.example.senomerc.databinding.ActivityMapsBinding;
@@ -21,9 +22,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -65,32 +67,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         stores = new ArrayList<>();
         markers = new ArrayList<>();
 
-        stores.add(new Store(10.762910922087965, 106.68217050135999, "Store 1"));
-        stores.add(new Store(10.875651138778734, 106.79916558196608, "Store 2"));
+        stores.add(new Store(10.762910922087965, 106.68217050135999, "Store 1", "227 Nguyen Van Cu, Phuong 4, Quan 5, TPHCM"));
+        stores.add(new Store(10.875651138778734, 106.79916558196608, "Store 2", "VQGX+7M3, Phuong Linh Trung, TP Thu Duc, TPHCM"));
 
         List<String> names = new ArrayList<>();
 
         for (int i = 0; i < stores.size(); ++i) {
             LatLng coordinate = new LatLng(stores.get(i).getLatitude(), stores.get(i).getLongitude());
             if (i == 0)
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 15.0f));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 17.0f));
+            names.add(stores.get(i).getName());
             markers.add(mMap.addMarker(new MarkerOptions()
                     .title(stores.get(i).getName())
                     .position(coordinate)
                     .draggable(false)
                     .alpha(1f)));
-            names.add(stores.get(i).getName());
         }
 
-        String[] items = names.toArray(new String[0]);
         Spinner dropdown = findViewById(R.id.locationSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, names.toArray(new String[0]));
         dropdown.setAdapter(adapter);
 
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markers.get(position).getPosition(), 15.0f));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markers.get(position).getPosition(), 17.0f));
+                TextView textView = findViewById(R.id.addressText);
+                textView.setText(stores.get(position).getAddress());
             }
 
             @Override
@@ -98,5 +101,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+
+        mMap.setOnMarkerClickListener(this);
     }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 20.0f));
+        Spinner dropdown = findViewById(R.id.locationSpinner);
+        for(int i = 0; i < markers.size(); ++i){
+            if (marker == markers.get(i)){
+                dropdown.setSelection(i);
+            }
+        }
+        return true;
+    }
+
 }

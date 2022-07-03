@@ -175,7 +175,7 @@ public class HomeFragment extends Fragment {
         categoryAdapter = new CategoryAdapter(getActivity(),categoryModelList,R.layout.category_list);
         catRecyclerView.setAdapter(categoryAdapter);
 
-        db.collection("Category")
+        db.collection("Category").orderBy("name")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

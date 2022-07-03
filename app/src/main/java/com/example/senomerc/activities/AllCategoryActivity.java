@@ -59,7 +59,7 @@ public class AllCategoryActivity extends AppCompatActivity {
         categoryAdapter = new CategoryAdapter(AllCategoryActivity.this,categoryModelList,R.layout.category_large);
         categoryRecyclerView.setAdapter(categoryAdapter);
 
-        db.collection("Category")
+        db.collection("Category").orderBy("name")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
