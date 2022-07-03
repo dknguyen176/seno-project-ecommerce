@@ -44,6 +44,8 @@ public class CartActivity extends AppCompatActivity {
     TextView total;
     Button checkOut;
 
+    int totalAmount = 0;
+
     List<MyCartModel> cartModelList;
     MyCartAdapter cartAdapter;
     //private FirebaseAuth auth;
@@ -105,8 +107,6 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void createList() {
-        total = findViewById(R.id.total);
-
         recyclerView = findViewById(R.id.cart_rec);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         cartModelList = new ArrayList<>();
@@ -126,20 +126,29 @@ public class CartActivity extends AppCompatActivity {
                                 cartModelList.add(myCartModel);
                                 cartAdapter.notifyDataSetChanged();
 
+                                totalAmount += myCartModel.getTotalPrice();
+
                             }
+                            createTotal();
                         }
-                        Log.d(TAG, "CartActivity Complete");
+
                     }
                 });
 
         LocalBroadcastManager.getInstance(this)
-                .registerReceiver(mMessageReceiver, new IntentFilter("MyTotalAmount"));
+                .registerReceiver(mMessageReceiver, new IntentFilter("ChangeTotal"));
+    }
+
+    private void createTotal() {
+        total = findViewById(R.id.total);
+        total.setText(Currency.toVND(totalAmount));
     }
 
     public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int totalAmount = intent.getIntExtra("totalAmount", 0);
+            int change = intent.getIntExtra("change", 0);
+            totalAmount += change;
             total.setText(Currency.toVND(totalAmount));
         }
     };

@@ -40,8 +40,6 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
     private Context context;
     private List<MyCartModel> list;
 
-    int totalAmount = 0;
-
     private FirebaseFirestore firestore;
 
     public MyCartAdapter(Context context, List<MyCartModel> list) {
@@ -62,98 +60,8 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
         int totalPrice = list.get(position).getTotalPrice();
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
         holder.name.setText(list.get(position).getName());
-        holder.price = list.get(position).getPrice();
         holder.total.setText(Currency.toVND(totalPrice));
         holder.quantity.setText(String.valueOf(list.get(position).getQuantity()));
-
-        // Total amount pass to Cart activity
-        totalAmount = totalAmount + totalPrice;
-        Intent intent = new Intent("MyTotalAmount");
-        intent.putExtra("totalAmount", totalAmount);
-
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
-        // Set on click listener
-        holder.plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int count = Integer.parseInt(holder.quantity.getText().toString());
-                if (count < 99) {
-                    count = count + 1;
-                    int totalPrice = holder.price * count;
-                    holder.quantity.setText(String.valueOf(count));
-                    holder.total.setText(Currency.toVND(totalPrice));
-
-                    totalAmount = totalAmount + holder.price;
-                    Intent intent = new Intent("MyTotalAmount");
-                    intent.putExtra("totalAmount", totalAmount);
-
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
-                    firestore.collection("AddToCart")
-                            .document(list.get(position).getDocumentId())
-                            .update("quantity", count);
-                    firestore.collection("AddToCart")
-                            .document(list.get(position).getDocumentId())
-                            .update("totalPrice", totalPrice);
-                }
-            }
-        });
-
-        holder.minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int count = Integer.parseInt(holder.quantity.getText().toString());
-                if (count > 1) {
-                    count = count - 1;
-                    int totalPrice = holder.price * count;
-                    holder.quantity.setText(String.valueOf(count));
-                    holder.total.setText(Currency.toVND(totalPrice));
-
-                    totalAmount = totalAmount - holder.price;
-                    Intent intent = new Intent("MyTotalAmount");
-                    intent.putExtra("totalAmount", totalAmount);
-
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
-                    firestore.collection("AddToCart")
-                            .document(list.get(position).getDocumentId())
-                            .update("quantity", count);
-                    firestore.collection("AddToCart")
-                            .document(list.get(position).getDocumentId())
-                            .update("totalPrice", totalPrice);
-
-                }
-            }
-        });
-
-        holder.cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firestore.collection("AddToCart")
-                            .document(list.get(position).getDocumentId())
-                            .delete()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        list.remove(holder.getAdapterPosition());
-                                        notifyDataSetChanged();
-
-                                        totalAmount = 0;
-                                        if (list.size() == 0) {
-                                            Intent intent = new Intent("MyTotalAmount");
-                                            intent.putExtra("totalAmount", totalAmount);
-                                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                                        }
-                                    }
-                                    else {
-
-                                    }
-                                }
-                            });
-            }
-        });
     }
 
     @Override
@@ -167,8 +75,6 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
         TextView name, total, quantity;
         ImageButton minus, plus, cancel;
 
-        int price;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -180,6 +86,103 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
             plus = itemView.findViewById(R.id.cart_add);
             cancel = itemView.findViewById(R.id.cart_cancel);
 
+            plus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    int count = list.get(position).getQuantity();
+                    int price = list.get(position).getPrice();
+                    int totalPrice = list.get(position).getTotalPrice();
+
+                    if (count < 99) {
+                        // update list
+                        count = count + 1;
+                        totalPrice = totalPrice + price;
+                        list.get(position).setQuantity(count);
+                        list.get(position).setTotalPrice(totalPrice);
+
+                        // update view
+                        quantity.setText(String.valueOf(count));
+                        total.setText(Currency.toVND(totalPrice));
+
+                        // send broadcast
+                        Intent intent = new Intent("ChangeTotal");
+                        intent.putExtra("change", price);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        // update firestore
+                        firestore.collection("AddToCart")
+                                .document(list.get(position).getDocumentId())
+                                .update("quantity", count);
+                        firestore.collection("AddToCart")
+                                .document(list.get(position).getDocumentId())
+                                .update("totalPrice", totalPrice);
+                    }
+                }
+            });
+
+            minus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    int count = list.get(position).getQuantity();
+                    int price = list.get(position).getPrice();
+                    int totalPrice = list.get(position).getTotalPrice();
+
+                    if (count > 1) {
+                        // update list
+                        count = count - 1;
+                        totalPrice = totalPrice - price;
+                        list.get(position).setQuantity(count);
+                        list.get(position).setTotalPrice(totalPrice);
+
+                        // update view
+                        quantity.setText(String.valueOf(count));
+                        total.setText(Currency.toVND(totalPrice));
+
+                        // send broadcast
+                        Intent intent = new Intent("ChangeTotal");
+                        intent.putExtra("change", -price);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        // update firestore
+                        firestore.collection("AddToCart")
+                                .document(list.get(position).getDocumentId())
+                                .update("quantity", count);
+                        firestore.collection("AddToCart")
+                                .document(list.get(position).getDocumentId())
+                                .update("totalPrice", totalPrice);
+                    }
+                }
+            });
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    int totalPrice = list.get(position).getTotalPrice();
+
+                    firestore.collection("AddToCart")
+                            .document(list.get(position).getDocumentId())
+                            .delete()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Intent intent = new Intent("ChangeTotal");
+                                        intent.putExtra("change", -totalPrice);
+                                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                                        list.remove(position);
+                                        notifyDataSetChanged();
+                                    }
+                                    else {
+
+                                    }
+                                }
+                            });
+                }
+            });
         }
     }
 }
