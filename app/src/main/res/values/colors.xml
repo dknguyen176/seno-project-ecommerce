@@ -13,4 +13,5 @@
     <color name="blue">#1b7ced</color>
     <color name="grey">#f788ce</color>
     <color name="faded">#beedec</color>
+    <color name="night">#263463</color>
 </resources>
