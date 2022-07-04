@@ -23,13 +23,11 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
 
     private Context context;
     private List<ProductsModel> list;
-    private String specialAttr;
     private int layoutId;
 
-    public ProductsAdapter(Context context, List<ProductsModel> list, String specialAttr, int layoutId) {
+    public ProductsAdapter(Context context, List<ProductsModel> list, int layoutId) {
         this.context = context;
         this.list = list;
-        this.specialAttr = specialAttr;
         this.layoutId = layoutId;
     }
 
@@ -45,7 +43,6 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.img);
         holder.name.setText(list.get(position).getName());
         holder.price.setText(Currency.toVND(list.get(position).getPrice()));
-        // holder.specAttr.setText(specialAttr);
 
         ProductsModel newProductsModel = list.get(position);
 
@@ -68,7 +65,7 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView img;
-        TextView name, price, specAttr;
+        TextView name, price;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,7 +73,6 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
             img = itemView.findViewById(R.id.new_img);
             name = itemView.findViewById(R.id.new_product_name);
             price = itemView.findViewById(R.id.new_price);
-            // specAttr = itemView.findViewById(R.id.specialAttribute);
         }
     }
 }

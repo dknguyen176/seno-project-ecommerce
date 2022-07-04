@@ -31,7 +31,7 @@ import java.util.List;
 public class AllProductsActivity extends AppCompatActivity {
 
     Toolbar toolbar;
-    TextView result, title;
+    TextView result, titleView;
     int count;
     String category, specAttr;
 
@@ -41,10 +41,17 @@ public class AllProductsActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
 
+    String title;
+    String[] tags;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_products);
+
+        Intent intent = getIntent();
+        title = intent.getStringExtra("title");
+        tags = intent.getStringExtra("tags").split(",");
 
         createToolbar();
 
@@ -54,52 +61,37 @@ public class AllProductsActivity extends AppCompatActivity {
     }
 
     private void createTitle() {
-        title = findViewById(R.id.title);
-        if (category != null && !category.isEmpty())
-            title.setText(category);
-        else if (specAttr != null && !specAttr.isEmpty())
-            title.setText(specAttr);
-        else
-            title.setText("All");
+        titleView = findViewById(R.id.title);
+        titleView.setText(title);
     }
 
     private void createProductView() {
         db = FirebaseFirestore.getInstance();
 
-        Intent intent = getIntent();
-        String db_url = intent.getStringExtra("db_url");
-        String specAttr = intent.getStringExtra("specAttr");
-        String category = intent.getStringExtra("category");
-        String order_by = intent.getStringExtra("order_by");
-        int limit = intent.getIntExtra("limit", 0);
-
-        this.category = category;
-        this.specAttr = specAttr;
-
         productRecyclerView = findViewById(R.id.product_rec);
         productRecyclerView.setLayoutManager(new GridLayoutManager(AllProductsActivity.this,2));
         productsList = new ArrayList<>();
-        productsAdapter = new ProductsAdapter(AllProductsActivity.this,productsList, specAttr, R.layout.product_large);
+        productsAdapter = new ProductsAdapter(AllProductsActivity.this,productsList, R.layout.product_large);
         productRecyclerView.setAdapter(productsAdapter);
 
-        Query query = db.collection(db_url);
-
-        if (category != null) query = query.whereEqualTo("type", category);
-        if (order_by != null) query = query.orderBy(order_by);
-        if (limit > 0) query = query.limit(limit);
-        else if (limit < 0) query = query.limitToLast(-limit);
-
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Product")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    count = task.getResult().size();
+                    count = 0;
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
                         ProductsModel productsModel = document.toObject(ProductsModel.class);
-                        productsList.add(productsModel);
-                        productsAdapter.notifyDataSetChanged();
-
+                        for (String tag : tags){
+                            if (productsModel.getTags().contains(tag)){
+                                productsList.add(productsModel);
+                                productsAdapter.notifyDataSetChanged();
+                                ++count;
+                                break;
+                            }
+                        }
                     }
                     createResults();
                 } else {

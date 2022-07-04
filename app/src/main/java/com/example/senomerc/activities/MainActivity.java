@@ -2,6 +2,7 @@ package com.example.senomerc.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -11,6 +12,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.view.View;
 
 import com.bumptech.glide.load.engine.Initializable;
@@ -23,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     Fragment homeFragment;
 
     Toolbar toolbar;
+
+    TextView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
                 Intent logout = new Intent();
                 setResult(Activity.RESULT_OK, logout);
                 finish();
+            }
+        });
+
+        searchView = findViewById(R.id.search);
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SearchActivity.class));
             }
         });
 

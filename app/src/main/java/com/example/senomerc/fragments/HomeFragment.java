@@ -33,6 +33,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -55,9 +56,7 @@ public class HomeFragment extends Fragment {
     FirebaseFirestore db;
 
     final int popular_shown = 4;
-    final int total_popular = 4;
-    final int new_shown = 5;
-    final int total_new = 5;
+    final int new_shown = 6;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -88,10 +87,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AllProductsActivity.class);
-                intent.putExtra("db_url", "Product");
-                intent.putExtra("specAttr", "New");
-                intent.putExtra("limit", total_new);
-
+                intent.putExtra("tags", "new");
+                intent.putExtra("title", "New Products");
                 startActivity(intent);
             }
         });
@@ -102,10 +99,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AllProductsActivity.class);
-                intent.putExtra("db_url", "Product");
-                intent.putExtra("specAttr", "Popular");
-                intent.putExtra("order_by", "rating");
-                intent.putExtra("limit", -total_popular);
+                intent.putExtra("tags", "popular");
+                intent.putExtra("title", "Popular Products");
                 startActivity(intent);
             }
         });
@@ -124,22 +119,27 @@ public class HomeFragment extends Fragment {
         popularProductRecyclerView = root.findViewById(R.id.popular_rec);
         popularProductRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         popularProductsModelList = new ArrayList<>();
-        popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList,"Popular", R.layout.product_large);
+        popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList, R.layout.product_large);
         popularProductRecyclerView.setAdapter(popularProductsAdapter);
 
-        db.collection("Product").orderBy("rating").limitToLast(popular_shown)
+        db.collection("Product").orderBy("rating")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            int cnt = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-
                                 ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
-                                popularProductsModelList.add(popularProductsModel);
-                                popularProductsAdapter.notifyDataSetChanged();
+                                if (popularProductsModel.getTags().contains("popular")) {
+                                    popularProductsModelList.add(popularProductsModel);
+                                    popularProductsAdapter.notifyDataSetChanged();
+                                    ++cnt;
+                                    if (cnt >= popular_shown) break;
+                                }
 
                             }
+                            Collections.reverse(popularProductsModelList);
                         } else {
                             Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
                         }
@@ -151,22 +151,27 @@ public class HomeFragment extends Fragment {
         newProductRecyclerView = root.findViewById(R.id.new_product_rec);
         newProductRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
         newProductsModelList = new ArrayList<>();
-        newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList,"New", R.layout.products);
+        newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList, R.layout.products);
         newProductRecyclerView.setAdapter(newProductsAdapter);
 
-        db.collection("Product").limit(new_shown)
+        db.collection("Product").orderBy("rating")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            int cnt = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                ProductsModel newProductsModel = document.toObject(ProductsModel.class);
-                                newProductsModelList.add(newProductsModel);
-                                newProductsAdapter.notifyDataSetChanged();
+                                ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
+                                if (popularProductsModel.getTags().contains("new")) {
+                                    newProductsModelList.add(popularProductsModel);
+                                    newProductsAdapter.notifyDataSetChanged();
+                                    ++cnt;
+                                    if (cnt >= new_shown) break;
+                                }
 
                             }
+                            Collections.reverse(newProductsModelList);
                         } else {
                             Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
                         }
