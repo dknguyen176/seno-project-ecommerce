@@ -6,14 +6,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.bumptech.glide.load.engine.Initializable;
 import com.example.senomerc.R;
 import com.example.senomerc.fragments.HomeFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,11 +29,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent returnNone = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnNone);
+
         toolbar = findViewById(R.id.home_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu2);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.icons8_logout_24);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent logout = new Intent();
+                setResult(Activity.RESULT_OK, logout);
+                finish();
+            }
+        });
 
         homeFragment = new HomeFragment();
         loadHomeFragment(homeFragment);

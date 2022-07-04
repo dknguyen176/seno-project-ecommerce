@@ -1,8 +1,10 @@
 package com.example.senomerc.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,6 +28,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
+    final private int LAUNCH_MAIN_ACTIVITY = 1;
+    final private int LAUNCH_REGISTER_ACTIVITY = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +38,8 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivityForResult(intent, LAUNCH_MAIN_ACTIVITY);
         }
 
         email = findViewById(R.id.email);
@@ -57,19 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                auth.signInWithEmailAndPassword(userEmail, userPassword)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                    finish();
-                                } else {
-                                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                login(userEmail, userPassword);
             }
         });
 
@@ -77,9 +70,46 @@ public class LoginActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
-                finish();
+                Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                startActivityForResult(intent, LAUNCH_REGISTER_ACTIVITY);
             }
         });
+    }
+
+    private void login(String userEmail, String userPassword) {
+        auth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivityForResult(intent, LAUNCH_MAIN_ACTIVITY);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_MAIN_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                finish();
+            }
+        } else if (requestCode == LAUNCH_REGISTER_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                String userEmail = data.getStringExtra("userEmail");
+                String userPassword = data.getStringExtra("userPassword");
+                login(userEmail, userPassword);
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+
+            }
+        }
     }
 }

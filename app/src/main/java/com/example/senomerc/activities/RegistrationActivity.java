@@ -3,6 +3,7 @@ package com.example.senomerc.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,6 +32,9 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        Intent returnNone = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnNone);
 
         auth = FirebaseAuth.getInstance();
         name = findViewById(R.id.name);
@@ -65,8 +69,10 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegistrationActivity.this, "Register Successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                                Intent login = new Intent();
+                                login.putExtra("userEmail", userEmail);
+                                login.putExtra("userPassword", userPassword);
+                                setResult(Activity.RESULT_OK, login);
                                 finish();
                             } else {
                                 Toast.makeText(RegistrationActivity.this, "Register Failed", Toast.LENGTH_SHORT).show();
@@ -80,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                // startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
                 finish();
             }
         });
