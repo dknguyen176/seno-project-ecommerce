@@ -22,6 +22,7 @@ import com.example.senomerc.helper.Currency;
 import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,6 +41,7 @@ public class DetailedActivity extends AppCompatActivity {
     int price1, count;
 
     private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
 
     private ProductsModel productsModel = null;
 
@@ -69,6 +71,7 @@ public class DetailedActivity extends AppCompatActivity {
         });
 
         firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         onBindView();
     }
@@ -144,7 +147,7 @@ public class DetailedActivity extends AppCompatActivity {
         cartMap.put("quantity", count);
         cartMap.put("totalPrice", price1 * count);
 
-        firestore.collection("AddToCart")
+        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                 .add(cartMap)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override

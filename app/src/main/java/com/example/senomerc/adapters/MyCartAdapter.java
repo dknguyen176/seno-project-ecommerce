@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,11 +42,14 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
     private List<MyCartModel> list;
 
     private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
 
     public MyCartAdapter(Context context, List<MyCartModel> list) {
         this.context = context;
         this.list = list;
-        this.firestore = FirebaseFirestore.getInstance();
+
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
     }
 
     @NonNull
@@ -111,10 +115,10 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                         // update firestore
-                        firestore.collection("AddToCart")
+                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                                 .document(list.get(position).getDocumentId())
                                 .update("quantity", count);
-                        firestore.collection("AddToCart")
+                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                                 .document(list.get(position).getDocumentId())
                                 .update("totalPrice", totalPrice);
                     }
@@ -146,10 +150,10 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                         // update firestore
-                        firestore.collection("AddToCart")
+                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                                 .document(list.get(position).getDocumentId())
                                 .update("quantity", count);
-                        firestore.collection("AddToCart")
+                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                                 .document(list.get(position).getDocumentId())
                                 .update("totalPrice", totalPrice);
                     }
@@ -162,7 +166,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     int position = getAdapterPosition();
                     int totalPrice = list.get(position).getTotalPrice();
 
-                    firestore.collection("AddToCart")
+                    firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                             .document(list.get(position).getDocumentId())
                             .delete()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {

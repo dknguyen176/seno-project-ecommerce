@@ -48,7 +48,8 @@ public class CartActivity extends AppCompatActivity {
 
     List<MyCartModel> cartModelList;
     MyCartAdapter cartAdapter;
-    //private FirebaseAuth auth;
+
+    private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
     @Override
@@ -58,6 +59,7 @@ public class CartActivity extends AppCompatActivity {
 
         //auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         createList();
 
@@ -73,7 +75,7 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     for(MyCartModel cartModel : cartModelList) {
-                        firestore.collection("AddToCart")
+                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                                 .document(cartModel.getDocumentId())
                                 .delete()
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -113,7 +115,7 @@ public class CartActivity extends AppCompatActivity {
         cartAdapter = new MyCartAdapter(this, cartModelList);
         recyclerView.setAdapter(cartAdapter);
 
-        firestore.collection("AddToCart")
+        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
