@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.RegistrationActivity"
-    android:background="@drawable/bg">
+    android:background="@drawable/gradient_bg">
 
     <LinearLayout
         android:id="@+id/sign_up_box"
@@ -76,7 +76,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="25dp"
             android:text="Sign In"
-            android:textColor="@color/black"
+            android:textColor="@color/dark_pink"
             android:textSize="18sp"
             android:fontFamily="@font/overlock_black"
             android:background="@drawable/roundedbutton2"
