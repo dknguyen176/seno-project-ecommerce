@@ -29,6 +29,7 @@ import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -122,7 +123,7 @@ public class HomeFragment extends Fragment {
         popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList, R.layout.product_large);
         popularProductRecyclerView.setAdapter(popularProductsAdapter);
 
-        db.collection("Product").orderBy("rating")
+        db.collection("Product").orderBy("rating", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -139,7 +140,6 @@ public class HomeFragment extends Fragment {
                                 }
 
                             }
-                            Collections.reverse(popularProductsModelList);
                         } else {
                             Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
                         }
@@ -154,7 +154,7 @@ public class HomeFragment extends Fragment {
         newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList, R.layout.products);
         newProductRecyclerView.setAdapter(newProductsAdapter);
 
-        db.collection("Product").orderBy("rating")
+        db.collection("Product").orderBy("rating", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -169,9 +169,7 @@ public class HomeFragment extends Fragment {
                                     ++cnt;
                                     if (cnt >= new_shown) break;
                                 }
-
                             }
-                            Collections.reverse(newProductsModelList);
                         } else {
                             Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
                         }
@@ -187,7 +185,7 @@ public class HomeFragment extends Fragment {
         categoryAdapter = new CategoryAdapter(getActivity(),categoryModelList,R.layout.category_list);
         catRecyclerView.setAdapter(categoryAdapter);
 
-        db.collection("Category").orderBy("name")
+        db.collection("CategoryCircle").orderBy("name")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
