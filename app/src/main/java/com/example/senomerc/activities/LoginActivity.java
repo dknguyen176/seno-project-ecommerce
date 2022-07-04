@@ -28,7 +28,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
-    final private int LAUNCH_MAIN_ACTIVITY = 1;
     final private int LAUNCH_REGISTER_ACTIVITY = 2;
 
     @Override
@@ -37,10 +36,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivityForResult(intent, LAUNCH_MAIN_ACTIVITY);
-        }
+
+        Intent returnNone = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnNone);
 
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
@@ -83,8 +81,9 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivityForResult(intent, LAUNCH_MAIN_ACTIVITY);
+                            Intent loginSuccess = new Intent();
+                            setResult(Activity.RESULT_OK, loginSuccess);
+                            finish();
                         } else {
                             Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                         }
@@ -96,13 +95,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == LAUNCH_MAIN_ACTIVITY) {
-            if (resultCode == Activity.RESULT_OK) {
-
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                finish();
-            }
-        } else if (requestCode == LAUNCH_REGISTER_ACTIVITY) {
+        if (requestCode == LAUNCH_REGISTER_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
                 String userEmail = data.getStringExtra("userEmail");
                 String userPassword = data.getStringExtra("userPassword");

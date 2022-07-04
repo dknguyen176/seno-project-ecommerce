@@ -99,28 +99,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     int totalPrice = list.get(position).getTotalPrice();
 
                     if (count < 99) {
-                        // update list
-                        count = count + 1;
-                        totalPrice = totalPrice + price;
-                        list.get(position).setQuantity(count);
-                        list.get(position).setTotalPrice(totalPrice);
-
-                        // update view
-                        quantity.setText(String.valueOf(count));
-                        total.setText(Currency.toVND(totalPrice));
-
-                        // send broadcast
-                        Intent intent = new Intent("ChangeTotal");
-                        intent.putExtra("change", price);
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
-                        // update firestore
-                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
-                                .document(list.get(position).getDocumentId())
-                                .update("quantity", count);
-                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
-                                .document(list.get(position).getDocumentId())
-                                .update("totalPrice", totalPrice);
+                        update(position, count+1, totalPrice+price, price);
                     }
                 }
             });
@@ -134,28 +113,7 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                     int totalPrice = list.get(position).getTotalPrice();
 
                     if (count > 1) {
-                        // update list
-                        count = count - 1;
-                        totalPrice = totalPrice - price;
-                        list.get(position).setQuantity(count);
-                        list.get(position).setTotalPrice(totalPrice);
-
-                        // update view
-                        quantity.setText(String.valueOf(count));
-                        total.setText(Currency.toVND(totalPrice));
-
-                        // send broadcast
-                        Intent intent = new Intent("ChangeTotal");
-                        intent.putExtra("change", -price);
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
-                        // update firestore
-                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
-                                .document(list.get(position).getDocumentId())
-                                .update("quantity", count);
-                        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
-                                .document(list.get(position).getDocumentId())
-                                .update("totalPrice", totalPrice);
+                        update(position, count-1, totalPrice-price, -price);
                     }
                 }
             });
@@ -187,6 +145,29 @@ public class MyCartAdapter extends RecyclerView.Adapter < MyCartAdapter.ViewHold
                             });
                 }
             });
+        }
+
+        private void update(int position, int count, int totalPrice, int change) {
+            // update list
+            list.get(position).setQuantity(count);
+            list.get(position).setTotalPrice(totalPrice);
+
+            // update view
+            quantity.setText(String.valueOf(count));
+            total.setText(Currency.toVND(totalPrice));
+
+            // send broadcast
+            Intent intent = new Intent("ChangeTotal");
+            intent.putExtra("change", change);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+            // update firestore
+            firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
+                    .document(list.get(position).getDocumentId())
+                    .update("quantity", count);
+            firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
+                    .document(list.get(position).getDocumentId())
+                    .update("totalPrice", totalPrice);
         }
     }
 }

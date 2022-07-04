@@ -1,14 +1,19 @@
 package com.example.senomerc.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +24,7 @@ import android.view.View;
 import com.bumptech.glide.load.engine.Initializable;
 import com.example.senomerc.R;
 import com.example.senomerc.fragments.HomeFragment;
+import com.example.senomerc.helper.Currency;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,36 +35,24 @@ public class MainActivity extends AppCompatActivity {
 
     TextView searchView;
 
+    private FirebaseAuth auth;
+
+    final private int LAUNCH_LOGIN_ACTIVITY = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() == null) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivityForResult(intent, LAUNCH_LOGIN_ACTIVITY);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent returnNone = new Intent();
-        setResult(Activity.RESULT_CANCELED, returnNone);
+        createToolbar();
 
-        toolbar = findViewById(R.id.home_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.icons8_logout_24);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent logout = new Intent();
-                setResult(Activity.RESULT_OK, logout);
-                finish();
-            }
-        });
-
-        searchView = findViewById(R.id.search);
-        searchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,SearchActivity.class));
-            }
-        });
+        createSearch();
 
         homeFragment = new HomeFragment();
         loadHomeFragment(homeFragment);
@@ -68,6 +62,32 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.home_container, homeFragment);
         transaction.commit();
+    }
+
+    private void createSearch() {
+        searchView = findViewById(R.id.search);
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SearchActivity.class));
+            }
+        });
+    }
+
+    private void createToolbar() {
+        toolbar = findViewById(R.id.home_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.icons8_logout_24);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivityForResult(intent, LAUNCH_LOGIN_ACTIVITY);
+            }
+        });
     }
 
     @Override
@@ -89,5 +109,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_LOGIN_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                finish();
+            }
+        }
     }
 }

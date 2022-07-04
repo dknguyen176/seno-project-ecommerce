@@ -29,7 +29,6 @@ import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -43,7 +42,7 @@ public class HomeFragment extends Fragment {
 
     // Category RecyclerView
     CategoryAdapter categoryAdapter;
-    List<CategoryModel> categoryModelList;
+    ArrayList<CategoryModel> categoryModelList;
 
     // New Products RecyclerView
     ProductsAdapter newProductsAdapter;
@@ -68,6 +67,11 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        Intent intent = getActivity().getIntent();
+        categoryModelList = (ArrayList<CategoryModel>) intent.getSerializableExtra("CategoryList");
+        newProductsModelList = (ArrayList<ProductsModel>) intent.getSerializableExtra("NewList");
+        popularProductsModelList = (ArrayList<ProductsModel>) intent.getSerializableExtra("PopularList");
 
         db = FirebaseFirestore.getInstance();
 
@@ -119,90 +123,26 @@ public class HomeFragment extends Fragment {
     private void createPopularProductsList(View root) {
         popularProductRecyclerView = root.findViewById(R.id.popular_rec);
         popularProductRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
-        popularProductsModelList = new ArrayList<>();
+        // popularProductsModelList = new ArrayList<>();
         popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList, R.layout.product_large);
         popularProductRecyclerView.setAdapter(popularProductsAdapter);
-
-        db.collection("Product").orderBy("rating", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int cnt = 0;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
-                                if (popularProductsModel.getTags().contains("popular")) {
-                                    popularProductsModelList.add(popularProductsModel);
-                                    popularProductsAdapter.notifyDataSetChanged();
-                                    ++cnt;
-                                    if (cnt >= popular_shown) break;
-                                }
-
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     private void createNewProductsList(View root) {
         newProductRecyclerView = root.findViewById(R.id.new_product_rec);
         newProductRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
-        newProductsModelList = new ArrayList<>();
+        // newProductsModelList = new ArrayList<>();
         newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList, R.layout.products);
         newProductRecyclerView.setAdapter(newProductsAdapter);
-
-        db.collection("Product").orderBy("rating", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int cnt = 0;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
-                                if (popularProductsModel.getTags().contains("new")) {
-                                    newProductsModelList.add(popularProductsModel);
-                                    newProductsAdapter.notifyDataSetChanged();
-                                    ++cnt;
-                                    if (cnt >= new_shown) break;
-                                }
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
 
     private void createCategoryList(View root) {
         catRecyclerView = root.findViewById(R.id.rec_category);
         catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
-        categoryModelList = new ArrayList<>();
+        // categoryModelList = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(getActivity(),categoryModelList,R.layout.category_list);
         catRecyclerView.setAdapter(categoryAdapter);
-
-        db.collection("CategoryCircle").orderBy("name")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                CategoryModel categoryModel = document.toObject(CategoryModel.class);
-                                categoryModelList.add(categoryModel);
-                                categoryAdapter.notifyDataSetChanged();
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
     }
 
 }

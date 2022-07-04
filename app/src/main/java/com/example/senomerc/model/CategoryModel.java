@@ -1,6 +1,8 @@
 package com.example.senomerc.model;
 
-public class CategoryModel {
+import java.io.Serializable;
+
+public class CategoryModel implements Serializable {
     String name;
     String img_url;
 
