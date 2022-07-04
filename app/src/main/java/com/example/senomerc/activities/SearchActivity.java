@@ -31,7 +31,6 @@ public class SearchActivity extends AppCompatActivity {
     HashMap<String, String> dbTags;
     ListView listView;
     List<String> recommendations;
-    Toolbar toolbar;
 
     FirebaseFirestore db;
 
@@ -40,25 +39,9 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        creatToolBar();
-
         createTags();
 
         createSearchView();
-    }
-
-    private void creatToolBar() {
-        toolbar = findViewById(R.id.search_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     private void createSearchView() {

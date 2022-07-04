@@ -6,20 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".activities.SearchActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/search_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/white">
-    </androidx.appcompat.widget.Toolbar>
-
     <androidx.appcompat.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginHorizontal="25dp"
+        android:layout_marginVertical="10dp"
         android:id="@+id/searchProducts"
         android:background="@drawable/bg_search_rounded"
         android:inputType="none"
@@ -28,7 +19,8 @@
         app:queryBackground="@android:color/transparent"
         app:iconifiedByDefault="false"
         app:queryHint="@string/searchHint"
-        app:layout_constraintTop_toBottomOf="@id/search_toolbar"/>
+        app:searchIcon="@drawable/search"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ListView
         android:id="@+id/listView"
