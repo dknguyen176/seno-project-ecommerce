@@ -7,4 +7,5 @@
     <string name="btn_label">Show menu</string>
     <string name="item1">Item 1</string>
     <string name="item2">Item 2</string>
+    <string name="searchHint">Search for a product</string>
 </resources>

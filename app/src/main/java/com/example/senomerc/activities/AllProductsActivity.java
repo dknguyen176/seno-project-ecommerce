@@ -32,8 +32,9 @@ public class AllProductsActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     TextView result, titleView;
+
     int count;
-    String category, specAttr;
+
 
     RecyclerView productRecyclerView;
     ProductsAdapter productsAdapter;
@@ -41,6 +42,7 @@ public class AllProductsActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
 
+    String category;
     String title;
     String[] tags;
 
@@ -52,6 +54,7 @@ public class AllProductsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         title = intent.getStringExtra("title");
         tags = intent.getStringExtra("tags").split(",");
+        category = intent.getStringExtra("category");
 
         createToolbar();
 
@@ -74,9 +77,11 @@ public class AllProductsActivity extends AppCompatActivity {
         productsAdapter = new ProductsAdapter(AllProductsActivity.this,productsList, R.layout.product_large);
         productRecyclerView.setAdapter(productsAdapter);
 
-        db.collection("Product")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Query query = db.collection("Product");
+
+        if (category != null) query = query.whereEqualTo("type", category);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

@@ -47,8 +47,8 @@ public class CategoryAdapter extends RecyclerView.Adapter < CategoryAdapter.View
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AllProductsActivity.class);
-                intent.putExtra("db_url", "Product");
-                intent.putExtra("specAttr", "");
+                intent.putExtra("title", name);
+                intent.putExtra("tags", "");
                 if (name.compareToIgnoreCase("all") != 0) intent.putExtra("category", name);
 
                 context.startActivity(intent);

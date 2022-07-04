@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,6 +98,7 @@ public class DetailedActivity extends AppCompatActivity {
             name.setText(productsModel.getName());
             rating.setRating(Float.parseFloat(productsModel.getRating()));
             description.setText(productsModel.getDescription());
+            description.setMovementMethod(new ScrollingMovementMethod());
             price.setText(Currency.toVND(price1));
             addToCart.setText(Currency.toVND(price1) + " - Add to Cart");
             quantity.setText("1");

@@ -24,10 +24,10 @@
         android:background="@drawable/bg_search_rounded"
         android:inputType="none"
         android:layoutDirection="rtl"
-        app:defaultQueryHint="Search for products"
+        app:defaultQueryHint="@string/searchHint"
         app:queryBackground="@android:color/transparent"
         app:iconifiedByDefault="false"
-        app:queryHint="Search for products"
+        app:queryHint="@string/searchHint"
         app:layout_constraintTop_toBottomOf="@id/search_toolbar"/>
 
     <ListView

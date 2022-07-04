@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
     // Firestore
     FirebaseFirestore db;
 
-    final int popular_shown = 4;
+    final int popular_shown = 6;
     final int new_shown = 6;
 
     public HomeFragment() {
