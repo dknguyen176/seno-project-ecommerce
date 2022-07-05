@@ -7,9 +7,14 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,7 +32,9 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
+    Toolbar toolbar;
     SearchView searchView;
+
     HashMap<String, String> dbTags;
     ListView listView;
     List<String> recommendations;
@@ -39,15 +46,30 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        createToolbar();
+
         createTags();
 
-        createSearchView();
+        // createSearchView();
+    }
+
+    private void createToolbar() {
+        toolbar = findViewById(R.id.home_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void createSearchView() {
         recommendations = new ArrayList<>();
         listView = findViewById(R.id.listView);
-        searchView = findViewById(R.id.searchProducts);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -129,5 +151,20 @@ public class SearchActivity extends AppCompatActivity {
 
     private void itemSelected(String s){
         searchView.setQuery(s, true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.searchProducts);
+        searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        createSearchView();
+
+        return true;
     }
 }

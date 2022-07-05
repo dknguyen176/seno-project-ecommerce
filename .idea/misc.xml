@@ -25,7 +25,7 @@
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/activity_maps.xml" value="0.33" />
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/activity_registration.xml" value="0.25" />
-        <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/activity_search.xml" value="0.5" />
+        <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/activity_search.xml" value="0.22" />
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/activity_success.xml" value="0.25" />
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/cart.xml" value="0.5" />
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/category_large.xml" value="0.25" />
@@ -42,6 +42,7 @@
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/menu/empty_menu.xml" value="0.38697916666666665" />
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/menu/main_menu.xml" value="0.33" />
         <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/menu/map_menu.xml" value="0.38697916666666665" />
+        <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/menu/search_menu.xml" value="0.20260416666666667" />
       </map>
     </option>
   </component>
