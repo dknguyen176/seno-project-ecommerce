@@ -149,13 +149,19 @@ public class AllProductsActivity extends AppCompatActivity {
                         }
                         else {
                             for (String tag : tags) {
-                                if (productsModel.getTags().contains(tag)) {
-                                    productsList.add(productsModel);
-                                    productsListPosition.put(docId, count);
-                                    // productsAdapter.notifyDataSetChanged();
-                                    ++count;
-                                    break;
+                                String[] prodTags = productsModel.getTags().split(",");
+                                boolean good = false;
+                                for(String prodTag : prodTags){
+                                    if (prodTag.startsWith(tag)){
+                                        productsList.add(productsModel);
+                                        productsListPosition.put(docId, count);
+                                        // productsAdapter.notifyDataSetChanged();
+                                        ++count;
+                                        good = true;
+                                        break;
+                                    }
                                 }
+                                if (good) break;
                             }
                         }
                     }

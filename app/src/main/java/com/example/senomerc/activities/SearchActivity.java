@@ -76,9 +76,11 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                query = query.replace(' ', ',');
+                query = query.replace(',',' ');
+                query = query.trim();
+                query = query.replace(' ',',');
                 while (query.contains(",,")){
-                    query.replace(",,",",");
+                    query = query.replace(",,",",");
                 }
                 query = query.toLowerCase();
                 Intent intent = new Intent(SearchActivity.this, AllProductsActivity.class);
@@ -157,6 +159,7 @@ public class SearchActivity extends AppCompatActivity {
                         ProductsModel productsModel = document.toObject(ProductsModel.class);
                         String[] prodTags = productsModel.getTags().split(",");
                         for (String prodTag : prodTags){
+                            if (prodTag.compareTo("NEW") == 0 || prodTag.compareTo("POPULAR") == 0) continue;
                             dbTags.put(prodTag, null);
                         }
                     }

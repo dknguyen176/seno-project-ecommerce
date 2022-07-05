@@ -177,7 +177,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AllProductsActivity.class);
-                intent.putExtra("tags", "new");
+                intent.putExtra("tags", "NEW");
                 intent.putExtra("title", "New Products");
                 startActivity(intent);
             }
@@ -189,7 +189,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AllProductsActivity.class);
-                intent.putExtra("tags", "popular");
+                intent.putExtra("tags", "POPULAR");
                 intent.putExtra("title", "Popular Products");
                 startActivity(intent);
             }
@@ -272,7 +272,6 @@ public class HomeFragment extends Fragment {
             newProductsModelList.get(position).setFavorite(tag);
             newProductsAdapter.notifyItemChanged(position);
         }
-
         if (AllProductsActivity.active) {
             if (AllProductsActivity.productsListPosition.containsKey(docId)) {
                 int position = AllProductsActivity.productsListPosition.get(docId);
@@ -281,5 +280,4 @@ public class HomeFragment extends Fragment {
             }
         }
     }
-
 }

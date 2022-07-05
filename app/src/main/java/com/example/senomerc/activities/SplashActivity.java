@@ -74,7 +74,7 @@ public class SplashActivity extends AppCompatActivity {
                                 popularProductsModel.setId(docId);
                                 popularProductsModel.setFavorite(false);
 
-                                if (popularProductsModel.getTags().contains("popular")) {
+                                if (popularProductsModel.getTags().contains("POPULAR")) {
                                     HomeFragment.popularProductModelPosition.put(docId, cnt);
                                     HomeFragment.popularProductsModelList.add(popularProductsModel);
                                     if (++cnt >= popular_shown) break;
@@ -107,7 +107,7 @@ public class SplashActivity extends AppCompatActivity {
                                 newProductsModel.setId(docId);
                                 newProductsModel.setFavorite(false);
 
-                                if (newProductsModel.getTags().contains("new")) {
+                                if (newProductsModel.getTags().contains("NEW")) {
                                     HomeFragment.newProductsModelPosition.put(docId, cnt);
                                     HomeFragment.newProductsModelList.add(newProductsModel);
                                     if (++cnt >= new_shown) break;
