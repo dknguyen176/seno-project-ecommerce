@@ -1,5 +1,6 @@
 package com.example.senomerc.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -23,6 +24,7 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.senomerc.activities.AllCategoryActivity;
 import com.example.senomerc.activities.AllProductsActivity;
 import com.example.senomerc.activities.CartActivity;
+import com.example.senomerc.activities.MainActivity;
 import com.example.senomerc.activities.MapsActivity;
 import com.example.senomerc.adapters.CategoryAdapter;
 import com.example.senomerc.adapters.ProductsAdapter;
@@ -31,6 +33,7 @@ import com.example.senomerc.R;
 import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -57,6 +60,7 @@ public class HomeFragment extends Fragment {
 
     // Firestore
     FirebaseFirestore db;
+    FirebaseAuth auth;
 
     final int popular_shown = 6;
     final int new_shown = 6;
@@ -77,6 +81,7 @@ public class HomeFragment extends Fragment {
         popularProductsModelList = (ArrayList<ProductsModel>) intent.getSerializableExtra("PopularList");
 
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         createCategoryList(root);
 
@@ -102,7 +107,23 @@ public class HomeFragment extends Fragment {
         root.findViewById(R.id.sc_clear).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
 
+                                    db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
+                                            .document(document.getId())
+                                            .delete();
+
+                                }
+
+                                MainActivity container = (MainActivity) getActivity();
+                                container.loadCartCount();
+                            }
+                        });
             }
         });
 

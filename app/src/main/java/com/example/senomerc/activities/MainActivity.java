@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadCartCount() {
+    public void loadCartCount() {
         db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

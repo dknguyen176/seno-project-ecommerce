@@ -81,16 +81,14 @@ public class CartActivity extends AppCompatActivity {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-
+                                        startActivity(new Intent(CartActivity.this, SuccessActivity.class));
+                                        finish();
                                     }
                                 });
                     }
                 } catch (Exception e) {
                     System.err.println("Error deleting collection : " + e.getMessage());
                 }
-
-                startActivity(new Intent(CartActivity.this, SuccessActivity.class));
-                finish();
             }
         });
     }
