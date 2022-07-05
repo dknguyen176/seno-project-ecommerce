@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -40,6 +41,7 @@ public class SearchActivity extends AppCompatActivity {
     List<String> recommendations;
 
     FirebaseFirestore db;
+    ImageView meme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class SearchActivity extends AppCompatActivity {
     private void createSearchView() {
         recommendations = new ArrayList<>();
         listView = findViewById(R.id.listView);
+        meme = findViewById(R.id.meme);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -77,6 +80,7 @@ public class SearchActivity extends AppCompatActivity {
                 while (query.contains(",,")){
                     query.replace(",,",",");
                 }
+                query = query.toLowerCase();
                 Intent intent = new Intent(SearchActivity.this, AllProductsActivity.class);
                 intent.putExtra("title", "Search Result");
                 intent.putExtra("tags",query);
@@ -90,31 +94,45 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                newText = newText.trim();
+                if (newText != null) {
+                    newText = newText.trim();
+                    newText.toLowerCase(Locale.ROOT);
+                }
                 if (newText == null || newText.compareTo("") == 0){
+                    meme.setImageResource(R.drawable.anyameme);
                     listView.setAdapter(new ArrayAdapter<String>(
                             SearchActivity.this, android.R.layout.simple_list_item_1, new ArrayList<>()));
                     return false;
                 }
+                else meme.setImageResource(android.R.color.transparent);
                 String prefix = "";
+                String suffix = newText;
                 int idx = newText.lastIndexOf(' ');
                 if (idx != -1){
                     idx += 1;
                     prefix = newText.substring(0, idx);
-                    newText = newText.substring(idx);
+                    suffix = newText.substring(idx);
+                    suffix = suffix.toLowerCase();
                 }
+                String sus = newText.toLowerCase();
                 recommendations.clear();;
                 for (String tag : dbTags.keySet()){
-                    if (tag.startsWith(newText)){
+                    if (tag.startsWith(suffix)){
                         recommendations.add(prefix + tag);
-                        if (recommendations.size() > 5) break;
                     }
+                    else if (tag.startsWith(sus)){
+                        recommendations.add(newText + tag.substring(newText.length()));
+                    }
+                    if (recommendations.size() > 6) break;
                 }
                 listView.setAdapter(new ArrayAdapter<String>(
                         SearchActivity.this, android.R.layout.simple_list_item_1, recommendations));
                 return true;
             }
         });
+
+        searchView.setIconified(false);
+        searchView.setQueryHint(getResources().getString(R.string.searchHint));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -162,6 +180,7 @@ public class SearchActivity extends AppCompatActivity {
         searchView = (SearchView) searchItem.getActionView();
 
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setSubmitButtonEnabled(true);
 
         createSearchView();
 

@@ -81,6 +81,13 @@ public class HomeFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
+        for (ProductsModel productsModel : popularProductsModelList){
+            productsModel.setFavorite(false);
+        }
+        for (ProductsModel productsModel : newProductsModelList){
+            productsModel.setFavorite(false);
+        }
+
         db.collection("Favorites").document(auth.getCurrentUser().getUid()).collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
