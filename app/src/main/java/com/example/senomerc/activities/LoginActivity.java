@@ -37,9 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            Intent oldIntent = LoginActivity.this.getIntent();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtras(oldIntent);
             startActivityForResult(intent, LAUNCH_MAIN_ACTIVITY);
         }
 
@@ -88,9 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
-                            Intent oldIntent = LoginActivity.this.getIntent();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtras(oldIntent);
                             startActivityForResult(intent, LAUNCH_MAIN_ACTIVITY);
                         } else {
                             Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();

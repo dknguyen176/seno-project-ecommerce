@@ -62,32 +62,27 @@ public class DetailedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detailed);
 
         final Object obj = getIntent().getSerializableExtra("product");
-
         productsModel = (ProductsModel) obj;
 
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+        createToolbar();
+
+        onBindView();
+    }
+
+    private void createToolbar() {
         toolbar = findViewById(R.id.home_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        firestore = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
-
-
-        onBindView();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadCartCount();
     }
 
     private void onBindView() {
@@ -117,8 +112,8 @@ public class DetailedActivity extends AppCompatActivity {
             addToCart.setText(Currency.toVND(price1) + " - Add to Cart");
             quantity.setText("1");
             favorite.setImageResource(productsModel.isFavorite()
-                    ? R.drawable.pink_heart
-                    : R.drawable.touch);
+                    ? R.drawable.icons8_favorite_64_1
+                    : R.drawable.icons8_favorite_64);
             favorite.setTag(productsModel.isFavorite());
             favorite.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -186,38 +181,7 @@ public class DetailedActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        MenuItem item = menu.findItem(R.id.cart);
-        MenuItemCompat.setActionView(item, R.layout.cart);
-        ConstraintLayout cart = (ConstraintLayout) MenuItemCompat.getActionView(item);
-
-        cartCount = (TextView) cart.findViewById(R.id.item_count);
-        cartCount.setText("0");
-        loadCartCount();
-
-        cart.findViewById(R.id.btn_cart).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(DetailedActivity.this, CartActivity.class));
-            }
-        });
-
+        getMenuInflater().inflate(R.menu.empty_menu, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    private void loadCartCount() {
-        firestore.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int count = task.getResult().size();
-                            cartCount.setText(String.valueOf(count));
-                        } else {
-
-                        }
-                    }
-                });
     }
 }

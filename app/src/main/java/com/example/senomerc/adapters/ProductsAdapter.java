@@ -57,8 +57,8 @@ public class ProductsAdapter extends RecyclerView.Adapter < ProductsAdapter.View
         holder.name.setText(productsModel.getName());
         holder.price.setText(Currency.toVND(productsModel.getPrice()));
         holder.favorite.setImageResource(productsModel.isFavorite()
-                ? R.drawable.pink_heart
-                : R.drawable.touch);
+                ? R.drawable.icons8_favorite_64_1
+                : R.drawable.icons8_favorite_64);
         holder.favorite.setTag(productsModel.isFavorite());
         holder.favorite.setOnClickListener(new View.OnClickListener() {
             @Override

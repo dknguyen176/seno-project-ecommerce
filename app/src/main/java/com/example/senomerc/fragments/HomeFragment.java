@@ -54,15 +54,16 @@ public class HomeFragment extends Fragment {
     // New Products RecyclerView
     public static ProductsAdapter newProductsAdapter;
     public static List<ProductsModel> newProductsModelList;
+    public static HashMap<String, Integer> newProductsModelPosition;
 
     // Popular Products RecyclerView
     public static ProductsAdapter popularProductsAdapter;
     public static List<ProductsModel> popularProductsModelList;
+    public static HashMap<String, Integer> popularProductModelPosition;
 
     // Firestore
     FirebaseFirestore db;
     FirebaseAuth auth;
-    HashMap < String, Object > favMap;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -77,8 +78,6 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        favMap = new HashMap<>();
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -89,8 +88,16 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()){
                             for (QueryDocumentSnapshot document : task.getResult()){
-                                String docID = document.get("id", String.class);
-                                favMap.put(docID, null);
+                                String docId = document.get("id", String.class);
+
+                                if (popularProductModelPosition.containsKey(docId)) {
+                                    int position = popularProductModelPosition.get(docId);
+                                    popularProductsModelList.get(position).setFavorite(true);
+                                }
+                                if (newProductsModelPosition.containsKey(docId)) {
+                                    int position = newProductsModelPosition.get(docId);
+                                    newProductsModelList.get(position).setFavorite(true);
+                                }
                             }
                             createNewProductsList(root);
                             createPopularProductsList(root);
@@ -195,9 +202,9 @@ public class HomeFragment extends Fragment {
         popularProductRecyclerView = root.findViewById(R.id.popular_rec);
         popularProductRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         // popularProductsModelList = new ArrayList<>();
-        for (ProductsModel productsModel : popularProductsModelList){
+        /*for (ProductsModel productsModel : popularProductsModelList){
             productsModel.setFavorite(favMap.containsKey(productsModel.getId()));
-        }
+        }*/
         popularProductsAdapter = new ProductsAdapter(getActivity(),popularProductsModelList, R.layout.product_large);
         popularProductRecyclerView.setAdapter(popularProductsAdapter);
     }
@@ -206,9 +213,9 @@ public class HomeFragment extends Fragment {
         newProductRecyclerView = root.findViewById(R.id.new_product_rec);
         newProductRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
         // newProductsModelList = new ArrayList<>();
-        for (ProductsModel productsModel : newProductsModelList){
+        /*for (ProductsModel productsModel : newProductsModelList){
             productsModel.setFavorite(favMap.containsKey(productsModel.getId()));
-        }
+        }*/
         newProductsAdapter = new ProductsAdapter(getActivity(),newProductsModelList, R.layout.products);
         newProductRecyclerView.setAdapter(newProductsAdapter);
     }
@@ -228,59 +235,42 @@ public class HomeFragment extends Fragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         if (tag) {
-            tag = false;
-            productsModel.setFavorite(false);
-
-            List<String> idList = new ArrayList<>();
-
             firestore.collection("Favorites").document(auth.getCurrentUser().getUid()).collection("User")
-                    .whereEqualTo("id", productsModel.getId())
-                    .get()
-                    .addOnCompleteListener(
-                            new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()){
-                                        for (QueryDocumentSnapshot document : task.getResult()){
-                                            idList.add(document.getId());
-                                        }
-                                        for (String id : idList){
-                                            firestore.collection("Favorites").document(auth.getCurrentUser().getUid()).collection("User")
-                                                    .document(id).delete();
-                                        }
-                                    }
-                                }
-                            }
-                    );
+                            .document(productsModel.getId()).delete();
         }
         else{
-            tag = true;
-            productsModel.setFavorite(true);
-
-            final HashMap< String, String > favMap = new HashMap<>();
-            favMap.put("id", productsModel.getId());
-
+            String docId = productsModel.getId();
             firestore.collection("Favorites").document(auth.getCurrentUser().getUid()).collection("User")
-                    .add(favMap);
+                    .document(docId)
+                    .set(new HashMap<String, String>() {{
+                            put("id", docId);
+                    }});
         }
+        tag = !tag;
         favorite.setTag(tag);
+        productsModel.setFavorite(tag);
 
         favorite.setImageResource(productsModel.isFavorite()
-                ? R.drawable.pink_heart
-                : R.drawable.touch);
+                ? R.drawable.icons8_favorite_64_1
+                : R.drawable.icons8_favorite_64);
 
-        for (int i=0;i<newProductsModelList.size();++i){
-            if (newProductsModelList.get(i).getId().compareTo(productsModel.getId()) == 0){
-                newProductsModelList.get(i).setFavorite(productsModel.isFavorite());
-                newProductsAdapter.notifyItemChanged(i);
-                break;
-            }
+        String docId = productsModel.getId();
+        if (popularProductModelPosition.containsKey(docId)) {
+            int position = popularProductModelPosition.get(docId);
+            popularProductsModelList.get(position).setFavorite(tag);
+            popularProductsAdapter.notifyItemChanged(position);
         }
-        for (int i=0;i<popularProductsModelList.size();++i){
-            if (popularProductsModelList.get(i).getId().compareTo(productsModel.getId()) == 0){
-                popularProductsModelList.get(i).setFavorite(productsModel.isFavorite());
-                popularProductsAdapter.notifyItemChanged(i);
-                break;
+        if (newProductsModelPosition.containsKey(docId)) {
+            int position = newProductsModelPosition.get(docId);
+            newProductsModelList.get(position).setFavorite(tag);
+            newProductsAdapter.notifyItemChanged(position);
+        }
+
+        if (AllProductsActivity.active) {
+            if (AllProductsActivity.productsListPosition.containsKey(docId)) {
+                int position = AllProductsActivity.productsListPosition.get(docId);
+                AllProductsActivity.productsList.get(position).setFavorite(tag);
+                AllProductsActivity.productsAdapter.notifyItemChanged(position);
             }
         }
     }

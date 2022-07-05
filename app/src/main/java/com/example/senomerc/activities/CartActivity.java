@@ -155,7 +155,7 @@ public class CartActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.cart_menu, menu);
+        getMenuInflater().inflate(R.menu.empty_menu, menu);
         return true;
     }
 }

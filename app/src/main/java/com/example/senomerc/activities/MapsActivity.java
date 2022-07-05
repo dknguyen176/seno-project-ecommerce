@@ -159,22 +159,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.map_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        /*if (id == R.id.menu_cart) {
-            startActivity(new Intent(MapsActivity.this, CartActivity.class));
-        }*/
-
-        /*if (id == R.id.map) {
-            startActivity(new Intent(MapsActivity.this, MapsActivity.class));
-        }*/
-
+        getMenuInflater().inflate(R.menu.empty_menu, menu);
         return true;
     }
 }

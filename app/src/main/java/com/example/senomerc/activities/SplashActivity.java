@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
@@ -58,6 +59,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void createPopularProductsList() {
         HomeFragment.popularProductsModelList = new ArrayList<>();
+        HomeFragment.popularProductModelPosition = new HashMap<>();
 
         db.collection("Product").orderBy("rating", Query.Direction.DESCENDING)
                 .get()
@@ -67,11 +69,15 @@ public class SplashActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             int cnt = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                String docId = document.getId();
                                 ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
+                                popularProductsModel.setId(docId);
+                                popularProductsModel.setFavorite(false);
+
                                 if (popularProductsModel.getTags().contains("popular")) {
+                                    HomeFragment.popularProductModelPosition.put(docId, cnt);
                                     HomeFragment.popularProductsModelList.add(popularProductsModel);
-                                    ++cnt;
-                                    if (cnt >= popular_shown) break;
+                                    if (++cnt >= popular_shown) break;
                                 }
 
                             }
@@ -86,6 +92,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void createNewProductsList() {
         HomeFragment.newProductsModelList = new ArrayList<>();
+        HomeFragment.newProductsModelPosition = new HashMap<>();
 
         db.collection("Product").orderBy("rating", Query.Direction.DESCENDING)
                 .get()
@@ -95,11 +102,15 @@ public class SplashActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             int cnt = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
-                                if (popularProductsModel.getTags().contains("new")) {
-                                    HomeFragment.newProductsModelList.add(popularProductsModel);
-                                    ++cnt;
-                                    if (cnt >= new_shown) break;
+                                String docId = document.getId();
+                                ProductsModel newProductsModel = document.toObject(ProductsModel.class);
+                                newProductsModel.setId(docId);
+                                newProductsModel.setFavorite(false);
+
+                                if (newProductsModel.getTags().contains("new")) {
+                                    HomeFragment.newProductsModelPosition.put(docId, cnt);
+                                    HomeFragment.newProductsModelList.add(newProductsModel);
+                                    if (++cnt >= new_shown) break;
                                 }
                             }
 

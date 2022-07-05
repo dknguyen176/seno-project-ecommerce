@@ -15,32 +15,22 @@
         app:layout_constraintBottom_toTopOf="@+id/new_product_name"
         app:cardCornerRadius="15dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/new_img"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/milk" />
-
-            <ImageView
-                android:id="@+id/product_favorite"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignTop="@id/new_img"
-                android:layout_alignRight="@id/new_img"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/touch" />
-
-        </RelativeLayout>
-
+        <ImageView
+            android:id="@+id/new_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/milk" />
     </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/product_favorite"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/icons8_favorite_64"
+        app:layout_constraintEnd_toEndOf="@+id/new_price"
+        app:layout_constraintTop_toTopOf="@+id/new_price"
+        app:layout_constraintBottom_toBottomOf="@id/new_price"/>
 
 
     <TextView
@@ -49,7 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/overlock_black"
-        android:text="Product Name"
+        android:maxLines="2"
+        android:text="Product \nName"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -64,7 +55,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/overlock_black"
         android:layout_marginBottom="5dp"
-        android:text="34.400đ"
+        android:text="123.400đ"
         android:textColor="@color/pink"
         android:textSize="14sp"
         android:textStyle="bold"

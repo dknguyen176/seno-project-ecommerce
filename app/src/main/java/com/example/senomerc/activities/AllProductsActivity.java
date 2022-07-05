@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AllProductsActivity extends AppCompatActivity {
+    public static boolean active = false;
 
     Toolbar toolbar;
     TextView result, titleView;
@@ -41,8 +42,9 @@ public class AllProductsActivity extends AppCompatActivity {
     int count;
 
     RecyclerView productRecyclerView;
-    ProductsAdapter productsAdapter;
-    List<ProductsModel> productsList;
+    public static ProductsAdapter productsAdapter;
+    public static List<ProductsModel> productsList;
+    public static HashMap<String, Integer> productsListPosition;
 
     FirebaseFirestore db;
     FirebaseAuth auth;
@@ -60,6 +62,7 @@ public class AllProductsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_products);
+        active = true;
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -67,8 +70,7 @@ public class AllProductsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         title = intent.getStringExtra("title");
         String sus = intent.getStringExtra("tags");
-        if (sus != null) tags = sus.split(",");
-        else tags = null;
+        if (sus != null) tags = sus.split(","); else tags = null;
         category = intent.getStringExtra("category");
         fav = title.compareToIgnoreCase("Favorite Products") == 0;
 
@@ -98,6 +100,12 @@ public class AllProductsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        active = false;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         loadCartCount();
@@ -114,6 +122,7 @@ public class AllProductsActivity extends AppCompatActivity {
         productsList = new ArrayList<>();
         productsAdapter = new ProductsAdapter(AllProductsActivity.this,productsList, R.layout.product_large);
         productRecyclerView.setAdapter(productsAdapter);
+        productsListPosition = new HashMap<>();
 
         Query query = db.collection("Product");
 
@@ -125,15 +134,16 @@ public class AllProductsActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     count = 0;
                     for (QueryDocumentSnapshot document : task.getResult()) {
-
+                        String docId = document.getId();
                         ProductsModel productsModel = document.toObject(ProductsModel.class);
-
-                        if (favMap.containsKey(productsModel.getId())) productsModel.setFavorite(true);
+                        productsModel.setId(docId);
+                        productsModel.setFavorite(favMap.containsKey(docId));
 
                         if (fav){
                             if (productsModel.isFavorite()) {
                                 productsList.add(productsModel);
-                                productsAdapter.notifyDataSetChanged();
+                                productsListPosition.put(docId, count);
+                                // productsAdapter.notifyDataSetChanged();
                                 ++count;
                             }
                         }
@@ -141,13 +151,15 @@ public class AllProductsActivity extends AppCompatActivity {
                             for (String tag : tags) {
                                 if (productsModel.getTags().contains(tag)) {
                                     productsList.add(productsModel);
-                                    productsAdapter.notifyDataSetChanged();
+                                    productsListPosition.put(docId, count);
+                                    // productsAdapter.notifyDataSetChanged();
                                     ++count;
                                     break;
                                 }
                             }
                         }
                     }
+                    productsAdapter.notifyDataSetChanged();
                     createResults();
                 } else {
                     Toast.makeText(AllProductsActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();

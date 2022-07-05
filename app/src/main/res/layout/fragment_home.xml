@@ -194,7 +194,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
-                android:layout_marginHorizontal="15dp"/>
+                android:layout_marginHorizontal="20dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -236,7 +236,8 @@
                 android:id="@+id/new_product_rec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="10dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -276,11 +277,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/popular_rec"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="7dp"
-                android:padding="5dp" />
+
+                android:layout_marginHorizontal="5dp" />
         </LinearLayout>
 
     </LinearLayout>
