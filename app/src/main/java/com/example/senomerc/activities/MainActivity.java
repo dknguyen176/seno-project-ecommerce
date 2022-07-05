@@ -31,7 +31,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     final private int LAUNCH_LOGIN_ACTIVITY = 1;
+
+    final int popular_shown = 6;
+    final int new_shown = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.senomerc.R;
 import com.example.senomerc.adapters.CategoryAdapter;
 import com.example.senomerc.adapters.ProductsAdapter;
+import com.example.senomerc.fragments.HomeFragment;
 import com.example.senomerc.model.CategoryModel;
 import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,10 +38,6 @@ public class SplashActivity extends AppCompatActivity {
 
     int count = 0;
 
-    ArrayList<CategoryModel> categoryModelList;
-    ArrayList<ProductsModel> newProductsModelList;
-    ArrayList<ProductsModel> popularProductsModelList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +57,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void createPopularProductsList() {
-        popularProductsModelList = new ArrayList<>();
+        HomeFragment.popularProductsModelList = new ArrayList<>();
 
         db.collection("Product").orderBy("rating", Query.Direction.DESCENDING)
                 .get()
@@ -72,7 +69,7 @@ public class SplashActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
                                 if (popularProductsModel.getTags().contains("popular")) {
-                                    popularProductsModelList.add(popularProductsModel);
+                                    HomeFragment.popularProductsModelList.add(popularProductsModel);
                                     ++cnt;
                                     if (cnt >= popular_shown) break;
                                 }
@@ -88,7 +85,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void createNewProductsList() {
-        newProductsModelList = new ArrayList<>();
+        HomeFragment.newProductsModelList = new ArrayList<>();
 
         db.collection("Product").orderBy("rating", Query.Direction.DESCENDING)
                 .get()
@@ -100,7 +97,7 @@ public class SplashActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 ProductsModel popularProductsModel = document.toObject(ProductsModel.class);
                                 if (popularProductsModel.getTags().contains("new")) {
-                                    newProductsModelList.add(popularProductsModel);
+                                    HomeFragment.newProductsModelList.add(popularProductsModel);
                                     ++cnt;
                                     if (cnt >= new_shown) break;
                                 }
@@ -115,7 +112,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void createCategoryList() {
-        categoryModelList = new ArrayList<>();
+        HomeFragment.categoryModelList = new ArrayList<>();
 
         db.collection("CategoryCircle").orderBy("name")
                 .get()
@@ -126,7 +123,7 @@ public class SplashActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
                                 CategoryModel categoryModel = document.toObject(CategoryModel.class);
-                                categoryModelList.add(categoryModel);
+                                HomeFragment.categoryModelList.add(categoryModel);
                             }
 
                             if (++count == 3) LoadingDone();
@@ -138,10 +135,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void LoadingDone() {
-        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-        intent.putExtra("CategoryList", categoryModelList);
-        intent.putExtra("NewList", newProductsModelList);
-        intent.putExtra("PopularList", popularProductsModelList);
+        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);
 
         finish();

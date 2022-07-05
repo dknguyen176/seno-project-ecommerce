@@ -15,12 +15,30 @@
         app:layout_constraintBottom_toTopOf="@+id/new_product_name"
         app:cardCornerRadius="15dp">
 
-        <ImageView
-            android:id="@+id/new_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/milk" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/new_img"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/milk" />
+
+            <ImageView
+                android:id="@+id/product_favorite"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignTop="@id/new_img"
+                android:layout_alignRight="@id/new_img"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/touch" />
+
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 

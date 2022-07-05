@@ -30,6 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class AllProductsActivity extends AppCompatActivity {
@@ -52,21 +53,46 @@ public class AllProductsActivity extends AppCompatActivity {
     String title;
     String[] tags;
 
+    HashMap < String, Object > favMap;
+    boolean fav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_products);
 
+        db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
         Intent intent = getIntent();
         title = intent.getStringExtra("title");
-        tags = intent.getStringExtra("tags").split(",");
+        String sus = intent.getStringExtra("tags");
+        if (sus != null) tags = sus.split(",");
+        else tags = null;
         category = intent.getStringExtra("category");
+        fav = title.compareToIgnoreCase("Favorite Products") == 0;
+
+        favMap = new HashMap<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        db.collection("Favorites").document(auth.getCurrentUser().getUid()).collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()){
+                                String docID = document.get("id", String.class);
+                                favMap.put(docID, null);
+                            }
+                            createProductView();
+                        }
+                    }
+                });
 
         createToolbar();
-
-        createProductView();
 
         createTitle();
     }
@@ -83,8 +109,6 @@ public class AllProductsActivity extends AppCompatActivity {
     }
 
     private void createProductView() {
-        db = FirebaseFirestore.getInstance();
-
         productRecyclerView = findViewById(R.id.product_rec);
         productRecyclerView.setLayoutManager(new GridLayoutManager(AllProductsActivity.this,2));
         productsList = new ArrayList<>();
@@ -103,12 +127,24 @@ public class AllProductsActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
                         ProductsModel productsModel = document.toObject(ProductsModel.class);
-                        for (String tag : tags){
-                            if (productsModel.getTags().contains(tag)){
+
+                        if (favMap.containsKey(productsModel.getId())) productsModel.setFavorite(true);
+
+                        if (fav){
+                            if (productsModel.isFavorite()) {
                                 productsList.add(productsModel);
                                 productsAdapter.notifyDataSetChanged();
                                 ++count;
-                                break;
+                            }
+                        }
+                        else {
+                            for (String tag : tags) {
+                                if (productsModel.getTags().contains(tag)) {
+                                    productsList.add(productsModel);
+                                    productsAdapter.notifyDataSetChanged();
+                                    ++count;
+                                    break;
+                                }
                             }
                         }
                     }

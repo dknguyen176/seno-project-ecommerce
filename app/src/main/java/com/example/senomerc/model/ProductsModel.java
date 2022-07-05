@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class ProductsModel implements Serializable {
 
+    String id;
     String description;
     String name;
     String rating;
@@ -11,11 +12,13 @@ public class ProductsModel implements Serializable {
     String img_url;
     String type;
     String tags;
+    boolean favorite;
 
     public ProductsModel() {
     }
 
-    public ProductsModel(String description, String name, String rating, int price, String img_url, String type, String tags) {
+    public ProductsModel(String id, String description, String name, String rating, int price, String img_url, String type, String tags) {
+        this.id = id;
         this.description = description;
         this.name = name;
         this.rating = rating;
@@ -23,6 +26,23 @@ public class ProductsModel implements Serializable {
         this.img_url = img_url;
         this.type = type;
         this.tags = tags;
+        this.favorite = false;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public String getDescription() {

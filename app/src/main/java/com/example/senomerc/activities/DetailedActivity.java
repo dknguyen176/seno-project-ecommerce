@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.senomerc.R;
+import com.example.senomerc.adapters.ProductsAdapter;
+import com.example.senomerc.fragments.HomeFragment;
 import com.example.senomerc.helper.Currency;
 import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,15 +30,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DetailedActivity extends AppCompatActivity {
 
-    ImageView detailedImg;
+    ImageView detailedImg, favorite;
     TextView name, description, price, quantity;
     Button addToCart;
     ImageButton plus, minus;
@@ -58,8 +61,6 @@ public class DetailedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed);
 
-        Intent intent = getIntent();
-
         final Object obj = getIntent().getSerializableExtra("product");
 
         productsModel = (ProductsModel) obj;
@@ -79,6 +80,7 @@ public class DetailedActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
+
         onBindView();
     }
 
@@ -97,6 +99,7 @@ public class DetailedActivity extends AppCompatActivity {
         rating = findViewById(R.id.detailed_rating);
         addToCart = findViewById(R.id.btn_addToCart);
         quantity = findViewById(R.id.cart_quantity);
+        favorite = findViewById(R.id.detailed_favorite);
         plus = findViewById(R.id.cart_add);
         minus = findViewById(R.id.cart_remove);
 
@@ -113,6 +116,16 @@ public class DetailedActivity extends AppCompatActivity {
             price.setText(Currency.toVND(price1));
             addToCart.setText(Currency.toVND(price1) + " - Add to Cart");
             quantity.setText("1");
+            favorite.setImageResource(productsModel.isFavorite()
+                    ? R.drawable.pink_heart
+                    : R.drawable.touch);
+            favorite.setTag(productsModel.isFavorite());
+            favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HomeFragment.onClickFavorites(favorite, productsModel);
+                }
+            });
         } else {
             price1 = 0;
             count = 0;
