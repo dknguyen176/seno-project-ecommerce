@@ -160,19 +160,4 @@ public class CartActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.cart_menu, menu);
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        /*if (id == R.id.menu_cart) {
-            startActivity(new Intent(this, CartActivity.class));
-        }*/
-
-        if (id == R.id.map) {
-            startActivity(new Intent(this, MapsActivity.class));
-        }
-
-        return true;
-    }
 }

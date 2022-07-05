@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import com.denzcoskun.imageslider.models.SlideModel;
 
 import com.example.senomerc.activities.AllCategoryActivity;
 import com.example.senomerc.activities.AllProductsActivity;
+import com.example.senomerc.activities.CartActivity;
+import com.example.senomerc.activities.MapsActivity;
 import com.example.senomerc.adapters.CategoryAdapter;
 import com.example.senomerc.adapters.ProductsAdapter;
 import com.example.senomerc.model.CategoryModel;
@@ -82,7 +85,40 @@ public class HomeFragment extends Fragment {
         createPopularProductsList(root);
 
         createSeeAllOnClick(root);
+
+        createShortcut(root);
+
         return root;
+    }
+
+    private void createShortcut(View root) {
+        root.findViewById(R.id.sc_cart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), CartActivity.class));
+            }
+        });
+
+        root.findViewById(R.id.sc_clear).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        root.findViewById(R.id.sc_fav).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        root.findViewById(R.id.sc_map).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), MapsActivity.class));
+            }
+        });
     }
 
     private void createSeeAllOnClick(View root) {

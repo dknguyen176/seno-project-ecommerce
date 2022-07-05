@@ -3,6 +3,8 @@ package com.example.senomerc.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +23,7 @@ import com.example.senomerc.model.CategoryModel;
 import com.example.senomerc.model.ProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -39,6 +42,9 @@ public class AllCategoryActivity extends AppCompatActivity {
     List<CategoryModel> categoryModelList;
 
     FirebaseFirestore db;
+    FirebaseAuth auth;
+
+    TextView cartCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,15 @@ public class AllCategoryActivity extends AppCompatActivity {
         createCategoryView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadCartCount();
+    }
+
     private void createCategoryView() {
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         categoryRecyclerView = findViewById(R.id.all_cat_rec);
         categoryRecyclerView.setLayoutManager(new GridLayoutManager(AllCategoryActivity.this,2));
@@ -97,21 +110,37 @@ public class AllCategoryActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+        MenuItem item = menu.findItem(R.id.cart);
+        MenuItemCompat.setActionView(item, R.layout.cart);
+        ConstraintLayout cart = (ConstraintLayout) MenuItemCompat.getActionView(item);
+
+        cartCount = (TextView) cart.findViewById(R.id.item_count);
+        cartCount.setText("0");
+        loadCartCount();
+
+        cart.findViewById(R.id.btn_cart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AllCategoryActivity.this, CartActivity.class));
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
+    private void loadCartCount() {
+        db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int count = task.getResult().size();
+                            cartCount.setText(String.valueOf(count));
+                        } else {
 
-        if (id == R.id.menu_cart) {
-            startActivity(new Intent(this, CartActivity.class));
-        }
-
-        if (id == R.id.map) {
-            startActivity(new Intent(this, MapsActivity.class));
-        }
-
-        return true;
+                        }
+                    }
+                });
     }
 }

@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -25,7 +27,11 @@ import com.bumptech.glide.load.engine.Initializable;
 import com.example.senomerc.R;
 import com.example.senomerc.fragments.HomeFragment;
 import com.example.senomerc.helper.Currency;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,14 +39,17 @@ public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
 
-    TextView searchView;
+    TextView searchView, cartCount;
 
     private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     final private int LAUNCH_LOGIN_ACTIVITY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
+
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -56,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
 
         homeFragment = new HomeFragment();
         loadHomeFragment(homeFragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadCartCount();
     }
 
     private void loadHomeFragment(Fragment homeFragment) {
@@ -90,25 +105,41 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+    private void loadCartCount() {
+        db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int count = task.getResult().size();
+                            cartCount.setText(String.valueOf(count));
+                        } else {
+
+                        }
+                    }
+                });
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        MenuItem item = menu.findItem(R.id.cart);
+        MenuItemCompat.setActionView(item, R.layout.cart);
+        ConstraintLayout cart = (ConstraintLayout) MenuItemCompat.getActionView(item);
 
-        if (id == R.id.menu_cart) {
-            startActivity(new Intent(MainActivity.this, CartActivity.class));
-        }
+        cartCount = (TextView) cart.findViewById(R.id.item_count);
+        cartCount.setText("0");
+        loadCartCount();
 
-        if (id == R.id.map) {
-            startActivity(new Intent(MainActivity.this, MapsActivity.class));
-        }
+        cart.findViewById(R.id.btn_cart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CartActivity.class));
+            }
+        });
 
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

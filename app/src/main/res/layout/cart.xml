@@ -1,0 +1,44 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="right">
+
+    <Button
+        android:id="@+id/btn_cart"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="20dp"
+        android:clickable="true"
+        android:scaleType="centerCrop"
+
+        android:background="@drawable/cart2"
+        app:backgroundTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </Button>
+
+    <TextView
+        android:id="@+id/item_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="15dp"
+        android:layout_marginEnd="17dp"
+        android:layout_alignParentRight="true"
+        android:padding="2dp"
+        android:background="@drawable/circle_textview"
+        android:fontFamily="@font/overlock_bold"
+        android:gravity="center"
+        android:text="99+"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
+        android:translationZ="5dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
