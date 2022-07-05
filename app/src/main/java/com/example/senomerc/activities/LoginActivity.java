@@ -1,5 +1,6 @@
 package com.example.senomerc.activities;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,17 +29,22 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
+    final private int LAUNCH_MAIN_ACTIVITY = 1;
     final private int LAUNCH_REGISTER_ACTIVITY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            Intent oldIntent = LoginActivity.this.getIntent();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtras(oldIntent);
+            startActivityForResult(intent, LAUNCH_MAIN_ACTIVITY);
+        }
 
-        Intent returnNone = new Intent();
-        setResult(Activity.RESULT_CANCELED, returnNone);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
@@ -81,9 +87,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                            Intent loginSuccess = new Intent();
-                            setResult(Activity.RESULT_OK, loginSuccess);
-                            finish();
+
+                            Intent oldIntent = LoginActivity.this.getIntent();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtras(oldIntent);
+                            startActivityForResult(intent, LAUNCH_MAIN_ACTIVITY);
                         } else {
                             Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                         }
@@ -102,6 +110,12 @@ public class LoginActivity extends AppCompatActivity {
                 login(userEmail, userPassword);
             } else if (resultCode == Activity.RESULT_CANCELED) {
 
+            }
+        } else if (requestCode == LAUNCH_MAIN_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                finish();
             }
         }
     }

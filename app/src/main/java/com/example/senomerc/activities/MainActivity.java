@@ -49,12 +49,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
-
         auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() == null) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivityForResult(intent, LAUNCH_LOGIN_ACTIVITY);
-        }
+
+        Intent returnNone = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnNone);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -99,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 auth.signOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivityForResult(intent, LAUNCH_LOGIN_ACTIVITY);
+                Intent signOut = new Intent();
+                setResult(Activity.RESULT_OK, signOut);
+                finish();
             }
         });
     }
