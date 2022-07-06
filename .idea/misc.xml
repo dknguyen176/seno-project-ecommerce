@@ -33,6 +33,10 @@
         <entry key="..\:/For HCMUS/Mobile App Dev/seno-project-ecommerce/app/src/main/res/layout/splash_screen.xml" value="0.12158054711246201" />
         <entry key="..\:/For HCMUS/Mobile App Dev/seno-project-ecommerce/app/src/main/res/menu/search_menu.xml" value="0.1" />
         <entry key="..\:/For HCMUS/Mobile App Dev/seno-project-ecommerce/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/activity_cart.xml" value="0.1911231884057971" />
+        <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/activity_detailed.xml" value="0.1" />
+        <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/category_large.xml" value="0.2015625" />
+        <entry key="..\:/Repositories/android/seno-project-ecommerce/app/src/main/res/layout/product_large.xml" value="0.1911231884057971" />
       </map>
     </option>
   </component>
