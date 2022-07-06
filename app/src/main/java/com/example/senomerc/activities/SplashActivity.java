@@ -137,6 +137,9 @@ public class SplashActivity extends AppCompatActivity {
                                 HomeFragment.categoryModelList.add(categoryModel);
                             }
 
+                            int length = HomeFragment.categoryModelList.size();
+                            Collections.swap(HomeFragment.categoryModelList, length - 1, length - 2);
+
                             if (++count == 3) LoadingDone();
                         } else {
                             Toast.makeText(SplashActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();

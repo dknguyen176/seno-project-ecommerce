@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AllCategoryActivity extends AppCompatActivity {
@@ -83,9 +84,13 @@ public class AllCategoryActivity extends AppCompatActivity {
 
                                 CategoryModel categoryModel = document.toObject(CategoryModel.class);
                                 categoryModelList.add(categoryModel);
-                                categoryAdapter.notifyDataSetChanged();
 
                             }
+
+                            int length = categoryModelList.size();
+                            Collections.swap(categoryModelList, length - 1, length - 2);
+
+                            categoryAdapter.notifyDataSetChanged();
                         } else {
                             Toast.makeText(AllCategoryActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
                         }

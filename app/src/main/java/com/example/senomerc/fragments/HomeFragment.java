@@ -81,12 +81,16 @@ public class HomeFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
-        for (ProductsModel productsModel : popularProductsModelList){
+        // Already set false in Splash
+        /*for (ProductsModel productsModel : popularProductsModelList){
             productsModel.setFavorite(false);
         }
         for (ProductsModel productsModel : newProductsModelList){
             productsModel.setFavorite(false);
-        }
+        }*/
+
+        createNewProductsList(root);
+        createPopularProductsList(root);
 
         db.collection("Favorites").document(auth.getCurrentUser().getUid()).collection("User")
                 .get()
@@ -100,14 +104,15 @@ public class HomeFragment extends Fragment {
                                 if (popularProductModelPosition.containsKey(docId)) {
                                     int position = popularProductModelPosition.get(docId);
                                     popularProductsModelList.get(position).setFavorite(true);
+                                    popularProductsAdapter.notifyItemChanged(position);
                                 }
                                 if (newProductsModelPosition.containsKey(docId)) {
                                     int position = newProductsModelPosition.get(docId);
                                     newProductsModelList.get(position).setFavorite(true);
+                                    newProductsAdapter.notifyItemChanged(position);
                                 }
                             }
-                            createNewProductsList(root);
-                            createPopularProductsList(root);
+
                         }
                     }
                 });
