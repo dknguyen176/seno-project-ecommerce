@@ -64,6 +64,11 @@ public class RegistrationActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (userPassword.length() < 6) {
+                    Toast.makeText(RegistrationActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 auth.createUserWithEmailAndPassword(userEmail, userPassword)
                     .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
