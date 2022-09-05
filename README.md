@@ -1,5 +1,5 @@
 # Ecommerce app 
-Made by Nguyen Vu Dang Khoa and Le Minh Hoang
+Made by Nguyen Vu Dang Khoa and Le Minh Hoang.
 This is a project for our Midterm exam on the course CS426 - Mobile Device Application Development.
 
 Some special features of our app:
